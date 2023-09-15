@@ -17,7 +17,7 @@ const showingSideNav = ref(false);
             }"
         />
         <div class="flex-1 min-w-0">
-            <header class="sticky top-0 bg-white border-b">
+            <header class="sticky top-0 z-10 bg-white border-b">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4">
                     <div class="flex justify-between h-16">
@@ -91,7 +91,7 @@ const showingSideNav = ref(false);
                                         <span class="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                class="inline-flex items-center px-3 py-2 text-gray-700 transition duration-150 ease-in-out bg-white rounded-md focus:outline-none"
+                                                class="inline-flex items-center px-3 py-2 text-gray-700 transition duration-150 ease-in-out focus:outline-none"
                                             >
                                                 <img
                                                     src="https://i.pravatar.cc/300"

@@ -73,7 +73,6 @@ const pieChartSeries = [44, 55, 13, 43, 22];
 
 const pieChartOptions = {
     chart: {
-        width: 380,
         type: "donut",
     },
     labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
@@ -81,9 +80,6 @@ const pieChartOptions = {
         {
             breakpoint: 480,
             options: {
-                chart: {
-                    width: 200,
-                },
                 legend: {
                     position: "bottom",
                 },
@@ -174,8 +170,8 @@ const pieChartOptions = {
                         </CardBody>
                     </Card>
                 </div>
-                <div class="grid gap-6 md:grid-cols-3">
-                    <div class="col-span-2">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <div class="md:col-span-2">
                         <div class="flex items-end justify-between mt-12">
                             <h2 class="text-lg font-semibold">
                                 Module Activities
