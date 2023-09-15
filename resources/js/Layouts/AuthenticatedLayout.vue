@@ -115,9 +115,9 @@ const showingSideNav = ref(false);
                 </nav>
             </aside>
             <div class="flex-1">
-                <nav class="z-10 bg-white border-b">
+                <header class="sticky top-0 bg-white border-b">
                     <!-- Primary Navigation Menu -->
-                    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="px-4">
                         <div class="flex justify-between h-16">
                             <!-- Left -->
                             <div class="flex items-center">
@@ -164,6 +164,28 @@ const showingSideNav = ref(false);
 
                             <!-- Right -->
                             <div class="flex items-center ml-6">
+                                <!-- Notifications -->
+                                <button class="px-3 py-2 text-gray-700">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <div
+                                    class="w-[1px] h-[20px] bg-gray-300 mx-4"
+                                ></div>
+
                                 <!-- Settings Dropdown -->
                                 <div class="relative">
                                     <Dropdown align="right" width="48">
@@ -173,23 +195,41 @@ const showingSideNav = ref(false);
                                             >
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
+                                                    class="inline-flex items-center px-3 py-2 text-gray-700 transition duration-150 ease-in-out bg-white rounded-md focus:outline-none"
                                                 >
-                                                    {{
-                                                        $page.props.auth.user
-                                                            .name
-                                                    }}
+                                                    <img
+                                                        src="https://i.pravatar.cc/300"
+                                                        alt="Avatar"
+                                                        class="w-8 h-8 rounded-full"
+                                                    />
+                                                    <div class="ml-4 text-left">
+                                                        <p
+                                                            class="text-sm font-medium"
+                                                        >
+                                                            {{
+                                                                $page.props.auth
+                                                                    .user.name
+                                                            }}
+                                                        </p>
+                                                        <p
+                                                            class="text-xs text-gray-400"
+                                                        >
+                                                            Superadmin
+                                                        </p>
+                                                    </div>
 
                                                     <svg
-                                                        class="ml-2 -mr-0.5 h-4 w-4"
                                                         xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke-width="1.5"
+                                                        stroke="currentColor"
+                                                        class="w-5 h-5 ml-4"
                                                     >
                                                         <path
-                                                            fill-rule="evenodd"
-                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                            clip-rule="evenodd"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                                                         />
                                                     </svg>
                                                 </button>
@@ -215,11 +255,11 @@ const showingSideNav = ref(false);
                             </div>
                         </div>
                     </div>
-                </nav>
+                </header>
 
                 <button
                     v-if="showingSideNav"
-                    class="fixed inset-0 bg-black/50"
+                    class="fixed inset-0 z-10 bg-black/50"
                     @click="showingSideNav = false"
                 ></button>
 
