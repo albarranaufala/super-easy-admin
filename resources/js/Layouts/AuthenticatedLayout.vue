@@ -160,7 +160,7 @@ const showingSideNav = ref(false);
             ></button>
 
             <!-- Page Content -->
-            <main class="w-full p-6 max-w-7xl lg:p-8">
+            <main class="container w-full p-6 mx-auto lg:p-8">
                 <slot />
             </main>
 
