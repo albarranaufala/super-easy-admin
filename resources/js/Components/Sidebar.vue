@@ -78,10 +78,10 @@ import Accordion from "@/Components/Accordion.vue";
 
                 Roles
             </NavLink>
-            <Accordion :open="route().current('modules.create')">
+            <Accordion :open="route().current('modules.create')" class="mt-2">
                 <template #trigger="{ open }">
                     <Button
-                        class="inline-flex items-center justify-between w-full p-4 mt-2 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 hover:text-indigo-500 focus:outline-none"
+                        class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 hover:text-indigo-500 focus:outline-none"
                     >
                         <div class="flex items-center">
                             <svg
