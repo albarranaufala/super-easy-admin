@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import Sidebar from "@/Components/Sidebar.vue";
+import Sidebar from "@/Components/Sidebar/Sidebar.vue";
 
 const showingSideNav = ref(false);
 </script>
 
 <template>
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen bg-gray-50">
         <Sidebar
             class="w-full h-screen max-w-[300px] lg:block lg:sticky lg:top-0"
             :class="{
@@ -20,7 +20,7 @@ const showingSideNav = ref(false);
             <header class="sticky top-0 z-10 bg-white border-b">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4">
-                    <div class="flex justify-between h-16">
+                    <div class="flex justify-between h-20">
                         <!-- Left -->
                         <div class="flex items-center">
                             <!-- Hamburger -->

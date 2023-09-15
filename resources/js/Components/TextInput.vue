@@ -20,7 +20,7 @@ defineExpose({ focus: () => input.value?.focus() });
 
 <template>
     <input
-        class="px-4 py-3 border-gray-300 rounded focus:border-indigo-500 focus:ring-indigo-500"
+        class="px-4 py-3 border-gray-300 rounded-md focus:border-indigo-500 focus:ring-indigo-500"
         :value="modelValue"
         @input="
             $emit(

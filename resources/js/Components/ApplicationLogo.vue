@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div class="flex items-center text-gray-700">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -13,6 +13,6 @@
             />
         </svg>
 
-        <h1 class="text-xl font-bold text-gray-700">Super Easy Admin</h1>
+        <h1 class="text-xl font-bold">Super Easy Admin</h1>
     </div>
 </template>

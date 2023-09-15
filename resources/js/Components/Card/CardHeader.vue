@@ -1,5 +1,5 @@
 <template>
-    <tbody class="">
+    <div class="px-6 pt-6">
         <slot />
-    </tbody>
+    </div>
 </template>

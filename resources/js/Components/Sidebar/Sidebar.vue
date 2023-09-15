@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import NavLink from "@/Components/NavLink.vue";
+import SidebarLink from "@/Components/Sidebar/SidebarLink.vue";
 import { Link } from "@inertiajs/vue3";
 import Accordion from "@/Components/Accordion.vue";
 </script>
 
 <template>
-    <aside class="overflow-auto border-r bg-gray-50">
+    <aside class="overflow-auto bg-gray-900 border-r">
+        <div
+            class="flex items-center h-20 px-6 border-b border-gray-600 border-dashed"
+        >
+            <Link :href="route('dashboard')">
+                <ApplicationLogo class="text-white" />
+            </Link>
+        </div>
         <nav class="p-6">
-            <div class="flex justify-center">
-                <Link :href="route('dashboard')">
-                    <ApplicationLogo />
-                </Link>
-            </div>
-            <NavLink
+            <SidebarLink
                 :href="route('dashboard')"
                 :active="route().current('dashboard')"
-                class="w-full mt-6"
+                class="w-full"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +35,8 @@ import Accordion from "@/Components/Accordion.vue";
                     />
                 </svg>
                 Dashboard
-            </NavLink>
-            <NavLink
+            </SidebarLink>
+            <SidebarLink
                 :href="route('users.index')"
                 :active="route().current('users.index')"
                 class="w-full mt-2"
@@ -55,8 +57,8 @@ import Accordion from "@/Components/Accordion.vue";
                 </svg>
 
                 Users
-            </NavLink>
-            <NavLink
+            </SidebarLink>
+            <SidebarLink
                 :href="route('dashboard')"
                 :active="false"
                 class="w-full mt-2"
@@ -77,11 +79,11 @@ import Accordion from "@/Components/Accordion.vue";
                 </svg>
 
                 Roles
-            </NavLink>
+            </SidebarLink>
             <Accordion :open="route().current('modules.index')" class="mt-2">
                 <template #trigger="{ open }">
-                    <Button
-                        class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-200 hover:text-indigo-500 focus:outline-none"
+                    <SidebarLink
+                        class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-800 hover:text-white focus:outline-none"
                     >
                         <div class="flex items-center">
                             <svg
@@ -116,42 +118,42 @@ import Accordion from "@/Components/Accordion.vue";
                                 d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                             />
                         </svg>
-                    </Button>
+                    </SidebarLink>
                 </template>
 
                 <template #content>
-                    <NavLink
+                    <SidebarLink
                         :href="route('modules.index')"
                         :active="route().current('modules.index')"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
                         Manage Modules
-                    </NavLink>
-                    <NavLink
+                    </SidebarLink>
+                    <SidebarLink
                         :href="route('dashboard')"
                         :active="false"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
                         Events
-                    </NavLink>
-                    <NavLink
+                    </SidebarLink>
+                    <SidebarLink
                         :href="route('dashboard')"
                         :active="false"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
                         Categories
-                    </NavLink>
-                    <NavLink
+                    </SidebarLink>
+                    <SidebarLink
                         :href="route('dashboard')"
                         :active="false"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
                         Articles
-                    </NavLink>
+                    </SidebarLink>
                 </template>
             </Accordion>
         </nav>
