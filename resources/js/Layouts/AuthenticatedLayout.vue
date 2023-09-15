@@ -160,9 +160,25 @@ const showingSideNav = ref(false);
             ></button>
 
             <!-- Page Content -->
-            <main class="w-full">
+            <main class="w-full p-6 max-w-7xl lg:p-8">
                 <slot />
             </main>
+
+            <!-- Footer -->
+            <footer class="p-6 lg:p-8">
+                <p class="text-sm">
+                    <span class="font-semibold text-gray-400"
+                        >{{ new Date().getFullYear() }}©</span
+                    >&nbsp;
+                    <a
+                        href="https://albarranaufala.github.io"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-indigo-500"
+                        >Albarra Naufala</a
+                    >
+                </p>
+            </footer>
         </div>
     </div>
 </template>

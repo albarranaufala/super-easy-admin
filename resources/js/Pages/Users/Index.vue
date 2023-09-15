@@ -12,6 +12,9 @@ import TextInput from "@/Components/TextInput.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";
+import Card from "@/Components/Card/Card.vue";
+import CardHeader from "@/Components/Card/CardHeader.vue";
+import CardBody from "@/Components/Card/CardBody.vue";
 
 const search = ref("");
 const page = ref(1);
@@ -21,12 +24,10 @@ const page = ref(1);
     <Head title="Users" />
 
     <AuthenticatedLayout>
-        <div class="py-6">
-            <div class="px-6 max-w-7xl lg:px-8">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Users
-                </h2>
-                <div class="flex items-center justify-between mt-6">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">Users</h2>
+        <Card class="mt-6 lg:mt-8">
+            <CardHeader>
+                <div class="flex items-center justify-between">
                     <div>
                         <TextInput
                             v-model="search"
@@ -37,7 +38,9 @@ const page = ref(1);
                         <PrimaryButton> Add New User </PrimaryButton>
                     </div>
                 </div>
-                <Table class="mt-6">
+            </CardHeader>
+            <CardBody>
+                <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>
@@ -73,7 +76,7 @@ const page = ref(1);
                     :total="25"
                     class="mt-6"
                 />
-            </div>
-        </div>
+            </CardBody>
+        </Card>
     </AuthenticatedLayout>
 </template>
