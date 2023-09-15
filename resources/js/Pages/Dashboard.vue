@@ -3,17 +3,94 @@ import Card from "@/Components/Card.vue";
 import CardBody from "@/Components/CardBody.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
 import { faker } from "@faker-js/faker";
-import TextInput from "@/Components/TextInput.vue";
-import { ref } from "vue";
 import Table from "@/Components/Table/Table.vue";
 import TableHead from "@/Components/Table/TableHead.vue";
 import TableBody from "@/Components/Table/TableBody.vue";
 import TableRow from "@/Components/Table/TableRow.vue";
 import TableCell from "@/Components/Table/TableCell.vue";
+import VueApexCharts from "vue3-apexcharts";
 
-const searchTable = ref("");
+const areaChartSeries = [
+    {
+        name: "Module A",
+        data: [31, 40, 28, 51, 42, 109, 100],
+    },
+    {
+        name: "Module B",
+        data: [11, 32, 45, 32, 34, 52, 41],
+    },
+];
+
+const areaChartOptions = {
+    chart: {
+        fontFamily: "Inter, Arial, sans-serif",
+        height: 400,
+        type: "area",
+        toolbar: {
+            show: false,
+        },
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    stroke: {
+        curve: "smooth",
+    },
+    xaxis: {
+        type: "datetime",
+        categories: [
+            "2018-09-19T00:00:00.000Z",
+            "2018-09-19T01:30:00.000Z",
+            "2018-09-19T02:30:00.000Z",
+            "2018-09-19T03:30:00.000Z",
+            "2018-09-19T04:30:00.000Z",
+            "2018-09-19T05:30:00.000Z",
+            "2018-09-19T06:30:00.000Z",
+        ],
+    },
+    tooltip: {
+        x: {
+            format: "dd/MM/yy HH:mm",
+        },
+    },
+    grid: {
+        padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+        },
+    },
+    legend: {
+        itemMargin: {
+            vertical: 16,
+        },
+    },
+};
+
+const pieChartSeries = [44, 55, 13, 43, 22];
+
+const pieChartOptions = {
+    chart: {
+        width: 380,
+        type: "donut",
+    },
+    labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+    responsive: [
+        {
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200,
+                },
+                legend: {
+                    position: "bottom",
+                },
+            },
+        },
+    ],
+};
 </script>
 
 <template>
@@ -21,7 +98,7 @@ const searchTable = ref("");
 
     <AuthenticatedLayout>
         <div class="py-6">
-            <div class="px-6 mx-auto max-w-7xl lg:px-8">
+            <div class="px-6 max-w-7xl lg:px-8">
                 <h1 class="text-xl font-semibold leading-tight">Dashboard</h1>
                 <div class="grid gap-6 mt-6 md:grid-cols-3">
                     <Card class="text-white bg-indigo-500">
@@ -97,42 +174,100 @@ const searchTable = ref("");
                         </CardBody>
                     </Card>
                 </div>
-                <div class="flex items-center justify-between mt-6">
-                    <TextInput
-                        v-model="searchTable"
-                        placeholder="Search User"
-                    />
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="col-span-2">
+                        <div class="flex items-end justify-between mt-12">
+                            <h2 class="text-lg font-semibold">
+                                Module Activities
+                            </h2>
+                            <Link
+                                :href="route('users.index')"
+                                class="underline"
+                            >
+                                View All
+                            </Link>
+                        </div>
+                        <VueApexCharts
+                            type="area"
+                            :options="areaChartOptions"
+                            :series="areaChartSeries"
+                            class="mt-6"
+                        />
+                        <div class="flex items-end justify-between mt-12">
+                            <h2 class="text-lg font-semibold">Latest Users</h2>
+                            <Link
+                                :href="route('users.index')"
+                                class="underline"
+                            >
+                                View All
+                            </Link>
+                        </div>
+                        <Table class="mt-6">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Email</TableCell>
+                                    <TableCell>Role</TableCell>
+
+                                    <TableCell>Status</TableCell>
+
+                                    <TableCell>Action</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow v-for="i in 5">
+                                    <TableCell>
+                                        {{ faker.person.fullName() }}
+                                    </TableCell>
+                                    <TableCell>
+                                        {{ faker.internet.email() }}
+                                    </TableCell>
+                                    <TableCell>Superadmin</TableCell>
+                                    <TableCell>
+                                        <span>Active</span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <SecondaryButton
+                                            >View Details</SecondaryButton
+                                        >
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+                    <div>
+                        <h2 class="mt-12 text-lg font-semibold">Modules</h2>
+                        <Table class="mt-6">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell> Module Name </TableCell>
+                                    <TableCell> Total Data </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell> Events </TableCell>
+                                    <TableCell> 12 </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell> Categories </TableCell>
+                                    <TableCell> 6 </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell> Articles </TableCell>
+                                    <TableCell> 128 </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                        <h2 class="mt-12 text-lg font-semibold">User Roles</h2>
+                        <VueApexCharts
+                            type="donut"
+                            :options="pieChartOptions"
+                            :series="pieChartSeries"
+                            class="mt-6"
+                        />
+                    </div>
                 </div>
-                <Table class="mt-6">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Role</TableCell>
-
-                            <TableCell>Status</TableCell>
-
-                            <TableCell>Action</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow v-for="i in 10">
-                            <TableCell>
-                                {{ faker.person.fullName() }}
-                            </TableCell>
-                            <TableCell>
-                                {{ faker.internet.email() }}
-                            </TableCell>
-                            <TableCell>Superadmin</TableCell>
-                            <TableCell>
-                                <span>Active</span>
-                            </TableCell>
-                            <TableCell>
-                                <SecondaryButton>View Details</SecondaryButton>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
             </div>
         </div>
     </AuthenticatedLayout>
