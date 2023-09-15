@@ -15,6 +15,9 @@ export default {
             fontFamily: {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
             },
+            transitionProperty: {
+                "max-height": "max-height",
+            },
         },
     },
 
