@@ -183,7 +183,7 @@ const showingSideNav = ref(false);
                                 </button>
 
                                 <div
-                                    class="w-[1px] h-[20px] bg-gray-300 mx-4"
+                                    class="w-[1px] h-[20px] bg-gray-300 mx-2"
                                 ></div>
 
                                 <!-- Settings Dropdown -->
