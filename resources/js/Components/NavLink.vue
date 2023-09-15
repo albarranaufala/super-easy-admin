@@ -11,8 +11,8 @@ const props = defineProps<{
 <template>
     <Link
         :href="href"
-        class="inline-flex items-center p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 hover:text-indigo-500 focus:outline-none"
-        :class="{ 'bg-gray-100 text-indigo-500': active }"
+        class="inline-flex items-center p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded hover:bg-gray-200 hover:text-indigo-500 focus:outline-none"
+        :class="{ 'bg-gray-200 text-indigo-500': active }"
     >
         <slot />
     </Link>

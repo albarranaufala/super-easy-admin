@@ -32,9 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/users', function () {
         return Inertia::render('Users/Index');
     })->name('users.index');
-    Route::get('/modules/create', function () {
-        return Inertia::render('Modules/Create');
-    })->name('modules.create');
+    Route::get('/modules', function () {
+        return Inertia::render('Modules/Index');
+    })->name('modules.index');
 });
 
 Route::middleware('auth')->group(function () {

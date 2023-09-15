@@ -6,7 +6,7 @@ import Accordion from "@/Components/Accordion.vue";
 </script>
 
 <template>
-    <aside class="overflow-auto bg-white border-r">
+    <aside class="overflow-auto border-r bg-gray-50">
         <nav class="p-6">
             <div class="flex justify-center">
                 <Link :href="route('dashboard')">
@@ -78,10 +78,10 @@ import Accordion from "@/Components/Accordion.vue";
 
                 Roles
             </NavLink>
-            <Accordion :open="route().current('modules.create')" class="mt-2">
+            <Accordion :open="route().current('modules.index')" class="mt-2">
                 <template #trigger="{ open }">
                     <Button
-                        class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 hover:text-indigo-500 focus:outline-none"
+                        class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-200 hover:text-indigo-500 focus:outline-none"
                     >
                         <div class="flex items-center">
                             <svg
@@ -107,7 +107,7 @@ import Accordion from "@/Components/Accordion.vue";
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="w-6 h-6"
+                            class="w-6 h-6 ml-3"
                             :class="{ 'rotate-180': open }"
                         >
                             <path
@@ -121,12 +121,12 @@ import Accordion from "@/Components/Accordion.vue";
 
                 <template #content>
                     <NavLink
-                        :href="route('modules.create')"
-                        :active="route().current('modules.create')"
+                        :href="route('modules.index')"
+                        :active="route().current('modules.index')"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
-                        Add New Module
+                        Manage Modules
                     </NavLink>
                     <NavLink
                         :href="route('dashboard')"
