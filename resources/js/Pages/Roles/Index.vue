@@ -8,6 +8,7 @@ import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 
 const search = ref("");
 </script>
@@ -17,12 +18,25 @@ const search = ref("");
 
     <AuthenticatedLayout>
         <h1 class="text-xl font-semibold leading-tight text-gray-800">Roles</h1>
+        <Breadcrumb
+            :links="[
+                {
+                    name: 'Home',
+                    href: route('dashboard'),
+                },
+                {
+                    name: 'Roles',
+                    href: route('roles.index'),
+                },
+            ]"
+            class="mt-2"
+        />
         <div class="flex items-center justify-between mt-6 lg:mt-8">
             <div>
-                <TextInput v-model="search" placeholder="Search users" />
+                <TextInput v-model="search" placeholder="Search roles" />
             </div>
             <div>
-                <PrimaryButton> Add New User </PrimaryButton>
+                <PrimaryButton> Add New Role </PrimaryButton>
             </div>
         </div>
         <div

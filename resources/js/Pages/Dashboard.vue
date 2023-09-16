@@ -12,6 +12,7 @@ import TableBody from "@/Components/Table/TableBody.vue";
 import TableRow from "@/Components/Table/TableRow.vue";
 import TableCell from "@/Components/Table/TableCell.vue";
 import VueApexCharts from "vue3-apexcharts";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 
 const areaChartSeries = [
     {
@@ -102,6 +103,19 @@ const pieChartOptions = {
 
     <AuthenticatedLayout>
         <h1 class="text-xl font-semibold leading-tight">Dashboard</h1>
+        <Breadcrumb
+            :links="[
+                {
+                    name: 'Home',
+                    href: route('dashboard'),
+                },
+                {
+                    name: 'Dashboard',
+                    href: route('dashboard'),
+                },
+            ]"
+            class="mt-2"
+        />
         <div class="grid gap-6 mt-6 lg:gap-8 lg:mt-8 md:grid-cols-3">
             <Card>
                 <CardBody>

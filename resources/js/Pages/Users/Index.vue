@@ -15,6 +15,7 @@ import Pagination from "@/Components/Pagination.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 
 const search = ref("");
 const page = ref(1);
@@ -25,6 +26,19 @@ const page = ref(1);
 
     <AuthenticatedLayout>
         <h1 class="text-xl font-semibold leading-tight text-gray-800">Users</h1>
+        <Breadcrumb
+            :links="[
+                {
+                    name: 'Home',
+                    href: route('dashboard'),
+                },
+                {
+                    name: 'Users',
+                    href: route('users.index'),
+                },
+            ]"
+            class="mt-2"
+        />
         <Card class="mt-6 lg:mt-8">
             <CardHeader>
                 <div class="flex items-center justify-between">
