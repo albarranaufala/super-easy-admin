@@ -10,10 +10,10 @@ const showingSideNav = ref(false);
 <template>
     <div class="flex min-h-screen bg-gray-50">
         <Sidebar
-            class="w-full h-screen max-w-[300px] lg:block lg:sticky lg:top-0"
+            class="w-full transform transition duration-200 inset-y-0 left-0 z-20 h-screen max-w-[300px] fixed lg:block lg:sticky lg:top-0 lg:translate-x-0"
             :class="{
-                'fixed inset-y-0 left-0 z-20': showingSideNav,
-                hidden: !showingSideNav,
+                '': showingSideNav,
+                '-translate-x-full': !showingSideNav,
             }"
         />
         <div class="flex-1 min-w-0">
@@ -153,11 +153,20 @@ const showingSideNav = ref(false);
                 </div>
             </header>
 
-            <button
-                v-if="showingSideNav"
-                class="fixed inset-0 z-10 bg-black/50"
-                @click="showingSideNav = false"
-            ></button>
+            <Transition
+                enter-active-class="transition"
+                enter-from-class="opacity-0"
+                enter-to-class="opacity-100"
+                leave-active-class="transition"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+                <button
+                    v-if="showingSideNav"
+                    class="fixed inset-0 z-10 bg-black/50"
+                    @click="showingSideNav = false"
+                ></button>
+            </Transition>
 
             <!-- Page Content -->
             <main class="container w-full p-6 mx-auto lg:p-8">

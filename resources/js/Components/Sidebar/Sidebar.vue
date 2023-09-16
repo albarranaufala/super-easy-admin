@@ -6,7 +6,7 @@ import Accordion from "@/Components/Accordion.vue";
 </script>
 
 <template>
-    <aside class="overflow-auto bg-gray-900 border-r">
+    <aside class="overflow-auto bg-gray-900">
         <div
             class="flex items-center h-20 px-6 border-b border-gray-600 border-dashed"
         >
