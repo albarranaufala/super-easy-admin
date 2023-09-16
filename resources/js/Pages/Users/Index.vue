@@ -24,7 +24,7 @@ const page = ref(1);
     <Head title="Users" />
 
     <AuthenticatedLayout>
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">Users</h2>
+        <h1 class="text-xl font-semibold leading-tight text-gray-800">Users</h1>
         <Card class="mt-6 lg:mt-8">
             <CardHeader>
                 <div class="flex items-center justify-between">

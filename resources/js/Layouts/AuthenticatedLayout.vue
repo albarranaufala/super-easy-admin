@@ -165,7 +165,7 @@ const showingSideNav = ref(false);
             </main>
 
             <!-- Footer -->
-            <footer class="p-6 lg:p-8">
+            <footer class="px-6 pb-6 lg:px-8 lg:pb-8">
                 <p class="text-sm">
                     <span class="font-semibold text-gray-400"
                         >{{ new Date().getFullYear() }}©</span

@@ -59,8 +59,8 @@ import Accordion from "@/Components/Accordion.vue";
                 Users
             </SidebarLink>
             <SidebarLink
-                :href="route('dashboard')"
-                :active="false"
+                :href="route('roles.index')"
+                :active="route().current('roles.index')"
                 class="w-full mt-2"
             >
                 <svg
