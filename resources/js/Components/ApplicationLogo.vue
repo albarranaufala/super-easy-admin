@@ -13,6 +13,6 @@
             />
         </svg>
 
-        <h1 class="text-xl font-bold">Super Easy Admin</h1>
+        <h1 class="text-xl font-semibold">Super Easy Admin</h1>
     </div>
 </template>

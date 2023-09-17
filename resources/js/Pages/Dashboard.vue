@@ -4,7 +4,7 @@ import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 import { faker } from "@faker-js/faker";
 import Table from "@/Components/Table/Table.vue";
 import TableHead from "@/Components/Table/TableHead.vue";

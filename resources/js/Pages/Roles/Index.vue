@@ -36,7 +36,9 @@ const search = ref("");
                 <TextInput v-model="search" placeholder="Search roles" />
             </div>
             <div>
-                <PrimaryButton> Add New Role </PrimaryButton>
+                <PrimaryButton :href="route('roles.create')">
+                    Add New Role
+                </PrimaryButton>
             </div>
         </div>
         <div

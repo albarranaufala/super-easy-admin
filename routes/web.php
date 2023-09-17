@@ -35,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/roles', function () {
         return Inertia::render('Roles/Index');
     })->name('roles.index');
+    Route::get('/roles/create', function () {
+        return Inertia::render('Roles/Create');
+    })->name('roles.create');
     Route::get('/modules', function () {
         return Inertia::render('Modules/Index');
     })->name('modules.index');
