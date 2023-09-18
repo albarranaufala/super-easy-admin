@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,9 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/users', function () {
-        return Inertia::render('Users/Index');
-    })->name('users.index');
+    Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::get('/modules', function () {
         return Inertia::render('Modules/Index');

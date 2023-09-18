@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head } from "@inertiajs/vue3";
-import { faker } from "@faker-js/faker";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Table from "@/Components/Table/Table.vue";
@@ -16,6 +15,11 @@ import Card from "@/Components/Card/Card.vue";
 import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { PaginatedData, User } from "@/types";
+
+defineProps<{
+    users: PaginatedData<User>;
+}>();
 
 const search = ref("");
 const page = ref(1);
@@ -67,12 +71,12 @@ const page = ref(1);
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow v-for="i in 10">
+                        <TableRow v-for="user in users.data">
                             <TableCell>
-                                {{ faker.person.fullName() }}
+                                {{ user.name }}
                             </TableCell>
                             <TableCell>
-                                {{ faker.internet.email() }}
+                                {{ user.email }}
                             </TableCell>
                             <TableCell>Superadmin</TableCell>
                             <TableCell>
@@ -85,9 +89,10 @@ const page = ref(1);
                     </TableBody>
                 </Table>
                 <Pagination
-                    v-model="page"
-                    :per-page="10"
-                    :total="25"
+                    :from="users.from"
+                    :to="users.to"
+                    :total="users.total"
+                    :links="users.links"
                     class="mt-6"
                 />
             </CardBody>

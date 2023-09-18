@@ -1,136 +1,67 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { Link } from "@inertiajs/vue3";
 
-const props = defineProps({
-    perPage: {
-        type: Number,
-        required: true,
-    },
-    total: {
-        type: Number,
-        required: true,
-    },
-    modelValue: {
-        type: Number,
-        default: () => 1,
-    },
-});
-
-const emit = defineEmits(["update:modelValue"]);
-
-const currentPage = computed({
-    get() {
-        return props.modelValue;
-    },
-    set(value) {
-        emit("update:modelValue", value);
-    },
-});
-
-const pagesCount = computed(() => {
-    if (!props.perPage) {
-        return 0;
-    }
-    return Math.ceil(props.total / props.perPage);
-});
-
-const firstDataNumber = computed(() => {
-    return (currentPage.value - 1) * props.perPage + 1;
-});
-
-const lastDataNumber = computed(() => {
-    const lastDataNumber = firstDataNumber.value + props.perPage - 1;
-    return lastDataNumber > props.total ? props.total : lastDataNumber;
-});
-
-const changePage = (newPage: number) => {
-    if (newPage < 1 || newPage > pagesCount.value) {
-        return;
-    }
-    currentPage.value = newPage;
-};
-
-const visiblePages = computed(() => {
-    const visiblePages = [];
-    let start = 1;
-    let end = pagesCount.value;
-
-    if (pagesCount.value <= 9) {
-        for (let i = 1; i <= pagesCount.value; i++) {
-            visiblePages.push(i);
-        }
-    } else if (currentPage.value <= 5) {
-        for (let i = 1; i <= 7; i++) {
-            visiblePages.push(i);
-        }
-        visiblePages.push("...");
-        visiblePages.push(pagesCount.value);
-    } else if (currentPage.value >= pagesCount.value - 4) {
-        visiblePages.push(1);
-        visiblePages.push("...");
-        for (let i = pagesCount.value - 6; i <= pagesCount.value; i++) {
-            visiblePages.push(i);
-        }
-    } else {
-        visiblePages.push(1);
-        visiblePages.push("...");
-        start = currentPage.value - 2;
-        end = currentPage.value + 2;
-        for (let i = start; i <= end; i++) {
-            visiblePages.push(i);
-        }
-        visiblePages.push("...");
-        visiblePages.push(pagesCount.value);
-    }
-
-    return visiblePages;
-});
+const props = defineProps<{
+    from: number;
+    to: number;
+    total: number;
+    links: Array<{
+        url?: string;
+        label: string;
+        active: boolean;
+    }>;
+}>();
 </script>
 
 <template>
-    <div
-        v-if="pagesCount > 1"
-        class="flex items-center justify-between text-sm"
-    >
+    <div class="flex items-center justify-between text-sm">
         <span class="text-gray-500">
-            Showing {{ firstDataNumber }} to {{ lastDataNumber }} of
-            {{ total }} results
+            Showing {{ from }} to {{ to }} of {{ total }} results
         </span>
-        <div>
-            <button
-                class="w-8 h-8 p-1 mr-2 rounded-md"
-                @click="changePage(currentPage - 1)"
-            >
-                &lt;
-            </button>
-            <template v-for="page in visiblePages">
-                <template v-if="typeof page === 'number'">
-                    <button
-                        class="w-8 h-8 p-1 mr-2 rounded-md"
-                        :class="[
-                            page === currentPage
-                                ? 'bg-indigo-500 text-white'
-                                : 'bg-white',
-                        ]"
-                        @click="changePage(page)"
+        <div class="flex items-center">
+            <template v-for="(link, i) in links">
+                <component
+                    :is="link.url ? Link : 'div'"
+                    :href="link.url"
+                    class="inline-block p-2 ml-2 min-w-[36px] font-medium text-center rounded-md"
+                    :class="[
+                        link.active ? 'bg-indigo-500 text-white' : 'bg-white',
+                        link.url && !link.active
+                            ? 'transition hover:bg-indigo-50 hover:text-indigo-500'
+                            : 'text-gray-300',
+                    ]"
+                >
+                    <svg
+                        v-if="i === 0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        class="w-5 h-5"
                     >
-                        {{ page }}
-                    </button>
-                </template>
-                <template v-else>
-                    <span
-                        class="inline-block w-8 h-8 p-1 mr-2 text-center rounded-md"
+                        <path
+                            fill-rule="evenodd"
+                            d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                    <template v-else-if="i < links.length - 1">
+                        {{ link.label }}
+                    </template>
+                    <svg
+                        v-else
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        class="w-5 h-5"
                     >
-                        {{ page }}
-                    </span>
-                </template>
+                        <path
+                            fill-rule="evenodd"
+                            d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </component>
             </template>
-            <button
-                class="w-8 h-8 p-1 rounded-md"
-                @click="changePage(currentPage + 1)"
-            >
-                &gt;
-            </button>
         </div>
     </div>
 </template>
