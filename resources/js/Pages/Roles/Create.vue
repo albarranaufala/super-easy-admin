@@ -48,37 +48,48 @@ const form = useForm({
                 <h2 class="text-lg font-semibold">Add New Role</h2>
             </CardHeader>
             <CardBody>
-                <FormGroup>
-                    <template #label>
-                        <InputLabel for="name" value="Role Name" />
-                    </template>
-                    <template #input>
-                        <TextInput
-                            id="name"
-                            placeholder="Input role name"
-                            class="w-full"
-                        />
-                    </template>
-                </FormGroup>
-                <FormGroup class="mt-6">
-                    <template #label>
-                        <InputLabel value="Role Permissions" />
-                    </template>
-                    <template #input>
-                        <div v-for="i in 10">
-                            <div class="py-3">
-                                <Checkbox :id="`check${i}`" />
-                                <InputLabel
-                                    :for="`check${i}`"
-                                    :value="faker.person.jobTitle()"
-                                    class="inline-block ml-3 align-middle"
-                                />
+                <form @submit.prevent="form.post(route('roles.store'))">
+                    <FormGroup>
+                        <template #label>
+                            <InputLabel for="name" value="Role Name" />
+                        </template>
+                        <template #input>
+                            <TextInput
+                                id="name"
+                                v-model="form.name"
+                                placeholder="Input role name"
+                                class="w-full"
+                            />
+                        </template>
+                    </FormGroup>
+                    <FormGroup class="mt-6">
+                        <template #label>
+                            <InputLabel value="Role Permissions" />
+                        </template>
+                        <template #input>
+                            <div v-for="i in 10">
+                                <div class="py-3">
+                                    <Checkbox
+                                        :id="`check${i}`"
+                                        :checked="false"
+                                    />
+                                    <InputLabel
+                                        :for="`check${i}`"
+                                        :value="faker.person.jobTitle()"
+                                        class="inline-block ml-3 align-middle"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </template>
-                </FormGroup>
-                <SecondaryButton class="mt-6 mr-4"> Cancel </SecondaryButton>
-                <PrimaryButton class="mt-6"> Save New Role </PrimaryButton>
+                        </template>
+                    </FormGroup>
+                    <SecondaryButton
+                        :href="route('roles.index')"
+                        class="mt-6 mr-4"
+                    >
+                        Cancel
+                    </SecondaryButton>
+                    <PrimaryButton class="mt-6"> Save New Role </PrimaryButton>
+                </form>
             </CardBody>
         </Card>
     </AuthenticatedLayout>

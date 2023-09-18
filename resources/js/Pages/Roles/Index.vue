@@ -9,8 +9,18 @@ import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import { PaginatedData } from "@/types";
 
 const search = ref("");
+
+const props = defineProps<{
+    roles: PaginatedData<{
+        id: number;
+        name: string;
+    }>;
+}>();
+
+console.log(props);
 </script>
 
 <template>
@@ -44,10 +54,10 @@ const search = ref("");
         <div
             class="grid grid-cols-1 gap-6 mt-6 lg:gap-8 lg:mt-8 md:grid-cols-2 lg:grid-cols-3"
         >
-            <Card v-for="_ in 8">
+            <Card v-for="role in roles.data">
                 <CardBody>
                     <h2 class="text-lg font-semibold">
-                        {{ faker.person.jobType() }}
+                        {{ role.name }}
                     </h2>
                     <p class="mt-6 text-sm font-semibold text-gray-500">
                         Total users with this role:
@@ -61,7 +71,9 @@ const search = ref("");
                         <li class="mt-4">Articles: View All, Write All</li>
                     </ul>
                     <div class="mt-6">
-                        <SecondaryButton> View Role </SecondaryButton>
+                        <SecondaryButton :href="route('roles.show', role.id)">
+                            View Role
+                        </SecondaryButton>
                     </div>
                 </CardBody>
             </Card>
