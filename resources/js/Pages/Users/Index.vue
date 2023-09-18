@@ -7,7 +7,7 @@ import TableHead from "@/Components/Table/TableHead.vue";
 import TableRow from "@/Components/Table/TableRow.vue";
 import TableCell from "@/Components/Table/TableCell.vue";
 import TableBody from "@/Components/Table/TableBody.vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Form/TextInput.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import Pagination from "@/Components/Pagination.vue";

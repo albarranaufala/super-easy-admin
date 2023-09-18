@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, router, useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import TextInput from "@/Components/TextInput.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/Form/TextInput.vue";
+import InputLabel from "@/Components/Form/InputLabel.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
@@ -10,14 +10,50 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import FormGroup from "@/Components/Form/FormGroup.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
-import InputError from "@/Components/InputError.vue";
+import InputError from "@/Components/Form/InputError.vue";
+import SelectInput from "@/Components/Form/SelectInput.vue";
+import { ref } from "vue";
+import axios from "axios";
 
 const form = useForm({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
+    role_id: "",
 });
+
+const roles = ref([
+    {
+        label: "Superadmin",
+        value: 1,
+    },
+    {
+        label: "Writer",
+        value: 2,
+    },
+]);
+
+const searchRoles = async (
+    search: string,
+    loading: (loading: boolean) => void
+) => {
+    loading(true);
+
+    const result: { data: { data: Array<{ id: number; name: string }> } } =
+        await axios.get("/api/users", {
+            params: {
+                search: search,
+            },
+        });
+
+    roles.value = result.data.data.map((item) => ({
+        label: item.name,
+        value: item.id,
+    }));
+
+    loading(false);
+};
 </script>
 
 <template>
@@ -108,6 +144,25 @@ const form = useForm({
                                 type="password"
                                 placeholder="Input as same as user password"
                                 class="w-full"
+                            />
+                            <InputError
+                                :message="form.errors.password_confirmation"
+                            />
+                        </template>
+                    </FormGroup>
+                    <FormGroup class="mt-6">
+                        <template #label>
+                            <InputLabel for="role" value="User Role" />
+                        </template>
+                        <template #input>
+                            <SelectInput
+                                id="role"
+                                v-model="form.role_id"
+                                :filterable="false"
+                                :options="roles"
+                                placeholder="Input as same as user password"
+                                class="w-full"
+                                @search="searchRoles"
                             />
                             <InputError
                                 :message="form.errors.password_confirmation"

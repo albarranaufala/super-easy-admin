@@ -3,7 +3,7 @@ import { Head } from "@inertiajs/vue3";
 import { faker } from "@faker-js/faker";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Form/TextInput.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import Card from "@/Components/Card/Card.vue";

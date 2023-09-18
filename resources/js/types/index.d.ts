@@ -24,3 +24,8 @@ export interface PaginatedData<T> {
         active: boolean;
     }>;
 }
+
+export interface SelectOption {
+    label: string;
+    value: string | number;
+}

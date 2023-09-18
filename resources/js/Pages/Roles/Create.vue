@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { Head, useForm } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import TextInput from "@/Components/TextInput.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/Form/TextInput.vue";
+import InputLabel from "@/Components/Form/InputLabel.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import FormGroup from "@/Components/Form/FormGroup.vue";
-import Checkbox from "@/Components/Checkbox.vue";
+import Checkbox from "@/Components/Form/Checkbox.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
-import InputError from "@/Components/InputError.vue";
+import InputError from "@/Components/Form/InputError.vue";
 import { faker } from "@faker-js/faker";
 
 const form = useForm({

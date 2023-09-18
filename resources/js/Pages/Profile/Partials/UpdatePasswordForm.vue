@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
+import InputError from "@/Components/Form/InputError.vue";
+import InputLabel from "@/Components/Form/InputLabel.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
+import TextInput from "@/Components/Form/TextInput.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -48,7 +48,11 @@ const updatePassword = () => {
 
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
             <div>
-                <InputLabel for="current_password" value="Current Password" />
+                <InputLabel
+                    for="current_password"
+                    value="Current
+                Password"
+                />
 
                 <TextInput
                     id="current_password"
@@ -83,7 +87,8 @@ const updatePassword = () => {
             <div>
                 <InputLabel
                     for="password_confirmation"
-                    value="Confirm Password"
+                    value="Confirm
+                Password"
                 />
 
                 <TextInput
