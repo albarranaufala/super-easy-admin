@@ -22,7 +22,6 @@ defineProps<{
 }>();
 
 const search = ref("");
-const page = ref(1);
 </script>
 
 <template>
@@ -53,7 +52,9 @@ const page = ref(1);
                         />
                     </div>
                     <div>
-                        <PrimaryButton> Add New User </PrimaryButton>
+                        <PrimaryButton :href="route('users.create')">
+                            Add New User
+                        </PrimaryButton>
                     </div>
                 </div>
             </CardHeader>

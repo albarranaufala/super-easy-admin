@@ -11,6 +11,7 @@ import FormGroup from "@/Components/Form/FormGroup.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
+import InputError from "@/Components/InputError.vue";
 import { faker } from "@faker-js/faker";
 
 const form = useForm({
@@ -60,6 +61,7 @@ const form = useForm({
                                 placeholder="Input role name"
                                 class="w-full"
                             />
+                            <InputError :message="form.errors.name" />
                         </template>
                     </FormGroup>
                     <FormGroup class="mt-6">
