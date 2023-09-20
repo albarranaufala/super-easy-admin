@@ -9,18 +9,13 @@ import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import Card from "@/Components/Card/Card.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
-import { PaginatedData } from "@/types";
+import { PaginatedData, Role } from "@/types";
 
 const search = ref("");
 
-const props = defineProps<{
-    roles: PaginatedData<{
-        id: number;
-        name: string;
-    }>;
+defineProps<{
+    roles: PaginatedData<Role>;
 }>();
-
-console.log(props);
 </script>
 
 <template>
@@ -61,7 +56,7 @@ console.log(props);
                     </h2>
                     <p class="mt-6 text-sm font-semibold text-gray-500">
                         Total users with this role:
-                        {{ faker.number.int({ min: 1, max: 15 }) }}
+                        {{ role.users_count }}
                     </p>
                     <ul class="pl-4 mt-6 text-sm text-gray-500 list-disc">
                         <li>User: View All, Write All</li>

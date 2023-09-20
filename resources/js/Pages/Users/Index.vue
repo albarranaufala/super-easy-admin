@@ -66,8 +66,6 @@ const search = ref("");
                             <TableCell>Email</TableCell>
                             <TableCell>Role</TableCell>
 
-                            <TableCell>Status</TableCell>
-
                             <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -79,9 +77,8 @@ const search = ref("");
                             <TableCell>
                                 {{ user.email }}
                             </TableCell>
-                            <TableCell>Superadmin</TableCell>
                             <TableCell>
-                                <span>Active</span>
+                                {{ user.role.name }}
                             </TableCell>
                             <TableCell>
                                 <SecondaryButton>View Details</SecondaryButton>

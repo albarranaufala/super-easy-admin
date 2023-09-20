@@ -15,7 +15,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('name')->paginate();
+        $users = User::with('role')
+            ->orderBy('name')
+            ->paginate();
 
         return Inertia::render('Users/Index', compact('users'));
     }
@@ -39,12 +41,14 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Password::defaults()],
+            'role_id' => 'required|integer|exists:roles,id'
         ]);
 
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'role_id' => $request->input('role_id')
         ]);
 
         event(new Registered($user));
