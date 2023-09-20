@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { SelectOption } from "@/types";
+import { onMounted } from "vue";
 import { computed } from "vue";
 import vSelect from "vue-select";
 
 const props = withDefaults(
     defineProps<{
-        modelValue: string | number;
+        modelValue?: string | number | SelectOption | null;
         options?: Array<SelectOption>;
         filterable?: boolean;
     }>(),
@@ -15,7 +16,10 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-    (e: "update:modelValue", value: string | number): void;
+    (
+        e: "update:modelValue",
+        value: string | number | SelectOption | null | undefined
+    ): void;
     (e: "search", search: string, loading: (loading: boolean) => void): void;
 }>();
 
@@ -38,7 +42,6 @@ const search = (search: string, loading: (loading: boolean) => void) => {
         v-model="value"
         :options="options"
         :filterable="filterable"
-        :reduce="(option: SelectOption) => option.value"
         @search="search"
         class="vue-select"
     />

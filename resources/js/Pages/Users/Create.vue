@@ -12,27 +12,32 @@ import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
 import SelectInput from "@/Components/Form/SelectInput.vue";
-import { ref } from "vue";
-import axios from "axios";
+import { SelectOption } from "@/types";
+import { computed } from "vue";
 
-const form = useForm({
+const props = defineProps<{
+    roles: Array<{ id: string; name: string }>;
+}>();
+
+const form = useForm<{
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    role: { value: number; label: string } | null;
+}>({
     name: "",
     email: "",
     password: "",
     password_confirmation: "",
-    role_id: "",
+    role: null,
 });
 
-const roles = ref([
-    {
-        label: "Superadmin",
-        value: 1,
-    },
-    {
-        label: "Writer",
-        value: 2,
-    },
-]);
+const roles = computed(() =>
+    props.roles.map(
+        (item): SelectOption => ({ value: item.id, label: item.name })
+    )
+);
 
 const searchRoles = async (
     search: string,
@@ -40,19 +45,20 @@ const searchRoles = async (
 ) => {
     loading(true);
 
-    const result: { data: { data: Array<{ id: number; name: string }> } } =
-        await axios.get("/api/users", {
-            params: {
-                search: search,
-            },
-        });
-
-    roles.value = result.data.data.map((item) => ({
-        label: item.name,
-        value: item.id,
-    }));
+    router.get(
+        route("users.create"),
+        { search_role: search },
+        { preserveState: true, preserveScroll: true }
+    );
 
     loading(false);
+};
+
+const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        role_id: data.role?.value,
+    })).post(route("users.store"));
 };
 </script>
 
@@ -85,7 +91,7 @@ const searchRoles = async (
                 <h2 class="text-lg font-semibold">Add New User</h2>
             </CardHeader>
             <CardBody>
-                <form @submit.prevent="form.post(route('users.store'))">
+                <form @submit.prevent="submit">
                     <FormGroup>
                         <template #label>
                             <InputLabel for="name" value="User Name" />
@@ -157,10 +163,10 @@ const searchRoles = async (
                         <template #input>
                             <SelectInput
                                 id="role"
-                                v-model="form.role_id"
+                                v-model="form.role"
                                 :filterable="false"
                                 :options="roles"
-                                placeholder="Input as same as user password"
+                                placeholder="Choose user role"
                                 class="w-full"
                                 @search="searchRoles"
                             />
