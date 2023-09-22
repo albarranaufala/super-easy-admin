@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { SelectOption } from "@/types";
-import { onMounted } from "vue";
 import { computed } from "vue";
 import vSelect from "vue-select";
 
@@ -9,6 +8,7 @@ const props = withDefaults(
         modelValue?: string | number | SelectOption | null;
         options?: Array<SelectOption>;
         filterable?: boolean;
+        reduce?: (option: any) => any;
     }>(),
     {
         filterable: true,
@@ -42,6 +42,7 @@ const search = (search: string, loading: (loading: boolean) => void) => {
         v-model="value"
         :options="options"
         :filterable="filterable"
+        :reduce="reduce"
         @search="search"
         class="vue-select"
     />
@@ -59,7 +60,7 @@ const search = (search: string, loading: (loading: boolean) => void) => {
 }
 
 .vue-select .vs__search {
-    @apply pl-4 pr-0 py-3 text-base mt-0 placeholder:font-medium placeholder:text-gray-400;
+    @apply pl-4 pr-0 py-3 text-base mt-0 placeholder:font-medium placeholder:text-gray-400 border-none;
 }
 
 .vue-select .vs__selected {

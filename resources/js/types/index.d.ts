@@ -12,6 +12,18 @@ export interface Role {
     users_count?: number;
 }
 
+export interface Module {
+    id: number;
+    name: string;
+    attributes?: Array<ModuleAttribute>;
+}
+
+export interface ModuleAttribute {
+    id: number;
+    type: string;
+    name: string;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>
 > = T & {

@@ -110,7 +110,10 @@ const showingSideNav = ref(false);
                                                     <p
                                                         class="text-xs text-gray-400"
                                                     >
-                                                        Superadmin
+                                                        {{
+                                                            $page.props.auth
+                                                                .user.role.name
+                                                        }}
                                                     </p>
                                                 </div>
 
@@ -174,7 +177,7 @@ const showingSideNav = ref(false);
             </main>
 
             <!-- Footer -->
-            <footer class="px-6 pb-6 lg:px-8 lg:pb-8">
+            <footer class="container px-6 pb-6 mx-auto lg:px-8 lg:pb-8">
                 <p class="text-sm">
                     <span class="font-semibold text-gray-400"
                         >{{ new Date().getFullYear() }}©</span

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -33,9 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
-    Route::get('/modules', function () {
-        return Inertia::render('Modules/Index');
-    })->name('modules.index');
+    Route::resource('modules', ModuleController::class);
 });
 
 Route::middleware('auth')->group(function () {

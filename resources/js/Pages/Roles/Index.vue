@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Head } from "@inertiajs/vue3";
-import { faker } from "@faker-js/faker";
 import { ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import TextInput from "@/Components/Form/TextInput.vue";
