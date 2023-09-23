@@ -30,6 +30,9 @@ export type PageProps<
     auth: {
         user: User;
     };
+    sidebar: {
+        modules: Arary<Module>;
+    };
 };
 
 export interface PaginatedData<T> {

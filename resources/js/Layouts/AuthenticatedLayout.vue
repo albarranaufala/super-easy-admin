@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import Sidebar from "@/Components/Sidebar/Sidebar.vue";
+
+const page = usePage();
 
 const showingSideNav = ref(false);
 </script>
@@ -103,16 +106,16 @@ const showingSideNav = ref(false);
                                                         class="text-sm font-medium"
                                                     >
                                                         {{
-                                                            $page.props.auth
-                                                                .user.name
+                                                            page.props.auth.user
+                                                                .name
                                                         }}
                                                     </p>
                                                     <p
                                                         class="text-xs text-gray-400"
                                                     >
                                                         {{
-                                                            $page.props.auth
-                                                                .user.role.name
+                                                            page.props.auth.user
+                                                                .role.name
                                                         }}
                                                     </p>
                                                 </div>

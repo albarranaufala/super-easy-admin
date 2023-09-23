@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import SidebarLink from "@/Components/Sidebar/SidebarLink.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import Accordion from "@/Components/Accordion.vue";
+
+const page = usePage();
 </script>
 
 <template>
@@ -131,28 +133,13 @@ import Accordion from "@/Components/Accordion.vue";
                         Manage Modules
                     </SidebarLink>
                     <SidebarLink
+                        v-for="mod in page.props.sidebar.modules"
                         :href="route('dashboard')"
                         :active="false"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>
-                        Events
-                    </SidebarLink>
-                    <SidebarLink
-                        :href="route('dashboard')"
-                        :active="false"
-                        class="w-full mt-2"
-                    >
-                        <span class="w-6 mr-3 text-center"> &#x2022; </span>
-                        Categories
-                    </SidebarLink>
-                    <SidebarLink
-                        :href="route('dashboard')"
-                        :active="false"
-                        class="w-full mt-2"
-                    >
-                        <span class="w-6 mr-3 text-center"> &#x2022; </span>
-                        Articles
+                        {{ mod.name }}
                     </SidebarLink>
                 </template>
             </Accordion>

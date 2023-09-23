@@ -35,6 +35,11 @@ class ModuleController extends Controller
             $module = Module::create([
                 'name' => $request->input('name')
             ]);
+            ModuleAttribute::create([
+                'module_id' => $module->id,
+                'type' => 'primary',
+                'name' => 'id'
+            ]);
             foreach ($request->input('attributes') as $attrReq) {
                 ModuleAttribute::create([
                     'module_id' => $module->id,

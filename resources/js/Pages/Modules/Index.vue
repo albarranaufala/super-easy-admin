@@ -69,7 +69,7 @@ defineProps<{
                     </ul>
                     <div class="mt-6">
                         <SecondaryButton :href="route('roles.show', mod.id)">
-                            View Role
+                            View Module
                         </SecondaryButton>
                     </div>
                 </CardBody>
