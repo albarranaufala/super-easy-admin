@@ -17,18 +17,23 @@ import { getError } from "@/helper";
 const props = defineProps<{
     module: Module;
     attributes: Array<ModuleAttribute>;
+    row: { [key: string]: any };
 }>();
 
 const form = useForm({
-    row: props.attributes.map((attr: ModuleAttribute) => ({
-        attribute_id: attr.id,
-        label: attr.name,
-        value: "",
-    })),
+    row: props.attributes
+        .filter((attr) => attr.type !== "primary")
+        .map((attr: ModuleAttribute) => ({
+            attribute_id: attr.id,
+            label: attr.name,
+            value: props.row[attr.id],
+        })),
 });
 
 const submit = () => {
-    form.post(route("crud.modules.store", props.module.id));
+    form.patch(
+        route("crud.modules.update", [props.module.id, props.row["primary"]])
+    );
 };
 </script>
 
@@ -50,15 +55,18 @@ const submit = () => {
                     href: route('crud.modules.index', module.id),
                 },
                 {
-                    name: 'Create',
-                    href: route('users.create', module.id),
+                    name: 'Edit',
+                    href: route('crud.modules.edit', [
+                        module.id,
+                        row['primary'],
+                    ]),
                 },
             ]"
             class="mt-2"
         />
         <Card class="mt-6 lg:mt-8">
             <CardHeader>
-                <h2 class="text-lg font-semibold">Add New Row</h2>
+                <h2 class="text-lg font-semibold">Edit Row</h2>
             </CardHeader>
             <CardBody>
                 <form @submit.prevent="submit">
@@ -92,7 +100,7 @@ const submit = () => {
                     >
                         Cancel
                     </SecondaryButton>
-                    <PrimaryButton class="mt-6"> Save New Row </PrimaryButton>
+                    <PrimaryButton class="mt-6"> Save Changes </PrimaryButton>
                 </form>
             </CardBody>
         </Card>

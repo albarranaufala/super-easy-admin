@@ -16,11 +16,12 @@ import CardHeader from "@/Components/Card/CardHeader.vue";
 import CardBody from "@/Components/Card/CardBody.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { Module, ModuleAttribute, PaginatedData } from "@/types";
+import Empty from "@/Components/Empty.vue";
 
 defineProps<{
     module: Module;
     attributes: Array<ModuleAttribute>;
-    rows: PaginatedData<any>;
+    rows: PaginatedData<{ [key: string]: string }>;
 }>();
 
 const search = ref("");
@@ -66,19 +67,39 @@ const search = ref("");
                     <TableHead>
                         <TableRow>
                             <TableCell> No. </TableCell>
-                            <TableCell v-for="attr in attributes">{{
-                                attr.name
-                            }}</TableCell>
+                            <TableCell
+                                v-for="attr in attributes.filter(
+                                    (attribute) => attribute.type !== 'primary'
+                                )"
+                                >{{ attr.name }}</TableCell
+                            >
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow v-for="(row, index) in rows.data">
+                        <TableRow v-if="rows.data.length === 0">
+                            <TableCell colspan="100%">
+                                <Empty />
+                            </TableCell>
+                        </TableRow>
+                        <TableRow v-else v-for="(row, index) in rows.data">
                             <TableCell>{{ rows.from + index }}</TableCell>
-                            <TableCell v-for="value in row">
-                                {{ value }}
+                            <TableCell
+                                v-for="attr in attributes.filter(
+                                    (attribute) => attribute.type !== 'primary'
+                                )"
+                            >
+                                {{ row[attr.id] }}
                             </TableCell>
                             <TableCell>
-                                <SecondaryButton>View Details</SecondaryButton>
+                                <SecondaryButton
+                                    :href="
+                                        route('crud.modules.edit', {
+                                            module: module.id,
+                                            row: row['primary'],
+                                        })
+                                    "
+                                    >Edit</SecondaryButton
+                                >
                             </TableCell>
                         </TableRow>
                     </TableBody>
