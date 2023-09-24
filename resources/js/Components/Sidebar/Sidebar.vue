@@ -3,6 +3,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import SidebarLink from "@/Components/Sidebar/SidebarLink.vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import Accordion from "@/Components/Accordion.vue";
+import { Module } from "@/types";
 
 const page = usePage();
 </script>
@@ -10,7 +11,7 @@ const page = usePage();
 <template>
     <aside class="overflow-auto bg-gray-900">
         <div
-            class="flex items-center h-20 px-6 border-b border-gray-600 border-dashed"
+            class="flex items-center h-[75px] px-6 border-b border-gray-600 border-dashed"
         >
             <Link :href="route('dashboard')">
                 <ApplicationLogo class="text-white" />
@@ -82,7 +83,10 @@ const page = usePage();
 
                 Roles
             </SidebarLink>
-            <Accordion :open="route().current('modules.index')" class="mt-2">
+            <Accordion
+                :open="route().current('modules.index') || page.props.sidebar.modules.map((mod: Module): boolean => route().current('crud.modules.index', {module: mod.id})).reduce((acc: number, cur: number) => acc || cur)"
+                class="mt-2"
+            >
                 <template #trigger="{ open }">
                     <SidebarLink
                         class="inline-flex items-center justify-between w-full p-4 font-medium leading-5 text-gray-500 transition duration-150 ease-in-out rounded-lg hover:bg-gray-800 hover:text-white focus:outline-none"
@@ -134,8 +138,8 @@ const page = usePage();
                     </SidebarLink>
                     <SidebarLink
                         v-for="mod in page.props.sidebar.modules"
-                        :href="route('dashboard')"
-                        :active="false"
+                        :href="route('crud.modules.index', mod.id)"
+                        :active="route().current('crud.modules.index', mod.id)"
                         class="w-full mt-2"
                     >
                         <span class="w-6 mr-3 text-center"> &#x2022; </span>

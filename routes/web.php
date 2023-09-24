@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CrudModuleController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -35,6 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('modules', ModuleController::class);
+    Route::get('crud/modules/{module}', [CrudModuleController::class, 'index'])->name('crud.modules.index');
+    Route::get('crud/modules/{module}/create', [CrudModuleController::class, 'create'])->name('crud.modules.create');
+    Route::post('crud/modules/{module}', [CrudModuleController::class, 'store'])->name('crud.modules.store');
+    Route::get('crud/modules/{module}/{row}', [CrudModuleController::class, 'show'])->name('crud.modules.show');
+    Route::get('crud/modules/{module}/{row}/edit', [CrudModuleController::class, 'edit'])->name('crud.modules.edit');
+    Route::patch('crud/modules/{module}/{row}', [CrudModuleController::class, 'update'])->name('crud.modules.update');
+    Route::delete('crud/modules/{module}/{row}', [CrudModuleController::class, 'destroy'])->name('crud.modules.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -23,7 +23,7 @@ const showingSideNav = ref(false);
             <header class="sticky top-0 z-10 bg-white border-b">
                 <!-- Primary Navigation Menu -->
                 <div class="px-4">
-                    <div class="flex justify-between h-20">
+                    <div class="flex justify-between h-[75px]">
                         <!-- Left -->
                         <div class="flex items-center">
                             <!-- Hamburger -->

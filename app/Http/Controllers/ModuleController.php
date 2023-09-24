@@ -38,7 +38,7 @@ class ModuleController extends Controller
             ModuleAttribute::create([
                 'module_id' => $module->id,
                 'type' => 'primary',
-                'name' => 'id'
+                'name' => 'ID'
             ]);
             foreach ($request->input('attributes') as $attrReq) {
                 ModuleAttribute::create([
