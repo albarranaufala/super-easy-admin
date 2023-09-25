@@ -13,7 +13,7 @@ import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
 import SelectInput from "@/Components/Form/SelectInput.vue";
 import { SelectOption } from "@/types";
-import DangerButton from "@/Components/DangerButton.vue";
+import DangerButton from "@/Components/Button/DangerButton.vue";
 import { getError } from "@/helper";
 
 const form = useForm<{

@@ -137,4 +137,16 @@ class CrudModuleController extends Controller
 
         return to_route('crud.modules.index', $moduleId);
     }
+
+    public function destroy(int $moduleId, int $primaryValueId)
+    {
+        $primaryValue = ModuleAttributeValue::findOrFail($primaryValueId);
+
+        ModuleAttributeValue::where('primary_id', $primaryValue->id)
+            ->delete();
+
+        $primaryValue->delete();
+
+        return to_route('crud.modules.index', $moduleId);
+    }
 }
