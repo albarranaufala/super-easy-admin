@@ -12,12 +12,55 @@ import Checkbox from "@/Components/Form/Checkbox.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
-import { faker } from "@faker-js/faker";
+import { Module } from "@/types";
+
+defineProps<{
+    modules: Array<Module>;
+}>();
 
 const form = useForm({
     name: "",
     permissions: [],
 });
+
+const availablePermissions = [
+    {
+        name: "View",
+        types: [
+            {
+                name: "All",
+            },
+            {
+                name: "Owned",
+            },
+        ],
+    },
+    {
+        name: "Create",
+    },
+    {
+        name: "Update",
+        types: [
+            {
+                name: "All",
+            },
+            {
+                name: "Owned",
+            },
+        ],
+    },
+    {
+        name: "Delete",
+        types: [
+            {
+                name: "All",
+            },
+            {
+                name: "Owned",
+            },
+        ],
+    },
+];
 </script>
 
 <template>
@@ -46,7 +89,7 @@ const form = useForm({
         />
         <Card class="mt-6 lg:mt-8">
             <CardHeader>
-                <h2 class="text-lg font-semibold">Add New Role</h2>
+                <h2 class="text-lg font-semibold">Role Information</h2>
             </CardHeader>
             <CardBody>
                 <form @submit.prevent="form.post(route('roles.store'))">
@@ -64,35 +107,67 @@ const form = useForm({
                             <InputError :message="form.errors.name" />
                         </template>
                     </FormGroup>
-                    <FormGroup class="mt-6">
-                        <template #label>
-                            <InputLabel value="Role Permissions" />
-                        </template>
-                        <template #input>
-                            <div v-for="i in 10">
-                                <div class="py-3">
+                </form>
+            </CardBody>
+        </Card>
+        <Card class="mt-6 lg:mt-8">
+            <CardHeader>
+                <h2 class="text-lg font-semibold">Role Permissions</h2>
+            </CardHeader>
+            <CardBody>
+                <FormGroup
+                    v-for="(module, index) in modules"
+                    :class="{ 'mt-6': index !== 0 }"
+                >
+                    <template #label>
+                        <InputLabel :value="module.name" />
+                    </template>
+                    <template #input>
+                        <div
+                            v-for="(permission, i) in availablePermissions"
+                            class="py-3"
+                        >
+                            <p class="font-medium">{{ permission.name }}</p>
+                            <div class="flex mt-6">
+                                <div
+                                    v-for="(type, j) in permission.types"
+                                    class="mr-6"
+                                >
                                     <Checkbox
-                                        :id="`check${i}`"
+                                        :id="`check${i}-${j}`"
                                         :checked="false"
                                     />
                                     <InputLabel
-                                        :for="`check${i}`"
-                                        :value="faker.person.jobTitle()"
+                                        :for="`check${i}-${j}`"
+                                        :value="type.name"
+                                        class="inline-block ml-3 align-middle"
+                                    />
+                                </div>
+                                <div
+                                    v-for="(
+                                        attr, j
+                                    ) in module.fillable_attributes"
+                                    class="mr-6"
+                                >
+                                    <Checkbox
+                                        :id="`check${i}-${j}`"
+                                        :checked="false"
+                                    />
+                                    <InputLabel
+                                        :for="`check${i}-${j}`"
+                                        :value="attr.name"
                                         class="inline-block ml-3 align-middle"
                                     />
                                 </div>
                             </div>
-                        </template>
-                    </FormGroup>
-                    <SecondaryButton
-                        :href="route('roles.index')"
-                        class="mt-6 mr-4"
-                    >
-                        Cancel
-                    </SecondaryButton>
-                    <PrimaryButton class="mt-6"> Save New Role </PrimaryButton>
-                </form>
+                        </div>
+                    </template>
+                </FormGroup>
             </CardBody>
         </Card>
+        <SecondaryButton :href="route('roles.index')" class="mt-6 mr-4">
+            Cancel
+        </SecondaryButton>
+        <PrimaryButton class="mt-6"> Save New Role </PrimaryButton>
     </AuthenticatedLayout>
 </template>

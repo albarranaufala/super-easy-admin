@@ -16,6 +16,7 @@ export interface Module {
     id: number;
     name: string;
     attributes?: Array<ModuleAttribute>;
+    fillable_attributes?: Array<ModuleAttribute>;
 }
 
 export interface ModuleAttribute {

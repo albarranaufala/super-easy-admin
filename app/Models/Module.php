@@ -18,4 +18,9 @@ class Module extends Model
     {
         return $this->hasMany(ModuleAttribute::class);
     }
+
+    public function fillableAttributes(): HasMany
+    {
+        return $this->hasMany(ModuleAttribute::class)->whereNotIn('type', ['primary']);
+    }
 }
