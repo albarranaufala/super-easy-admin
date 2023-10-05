@@ -6,6 +6,7 @@ use App\Models\Module;
 use App\Models\ModuleAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ModuleController extends Controller
@@ -27,7 +28,7 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
-            'attributes.*.type' => 'required|string',
+            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch')],
             'attributes.*.name' => 'required|string|max:255'
         ]);
 

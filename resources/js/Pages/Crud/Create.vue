@@ -11,6 +11,7 @@ import FormGroup from "@/Components/Form/FormGroup.vue";
 import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
+import Switch from "@/Components/Form/Switch.vue";
 import { Module, ModuleAttribute } from "@/types";
 import { getError } from "@/helper";
 
@@ -22,8 +23,9 @@ const props = defineProps<{
 const form = useForm({
     row: props.attributes.map((attr: ModuleAttribute) => ({
         attribute_id: attr.id,
+        type: attr.type,
         label: attr.name,
-        value: "",
+        value: attr.default_value,
     })),
 });
 
@@ -74,10 +76,17 @@ const submit = () => {
                         </template>
                         <template #input>
                             <TextInput
+                                v-if="attr.type === 'text'"
                                 :id="attr.attribute_id"
                                 v-model="attr.value"
                                 :placeholder="attr.label"
                                 class="w-full"
+                            />
+                            <Switch
+                                v-else-if="attr.type === 'switch'"
+                                :id="`${attr.attribute_id}`"
+                                v-model="attr.value"
+                                class="py-2"
                             />
                             <InputError
                                 :message="

@@ -45,6 +45,10 @@ const attributeTypes: Array<SelectOption> = [
         value: "text",
         label: "Text",
     },
+    {
+        value: "switch",
+        label: "Switch",
+    },
 ];
 
 const addNewAttribute = () => {

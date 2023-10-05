@@ -13,6 +13,7 @@ import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
 import { Module, ModuleAttribute } from "@/types";
 import { getError } from "@/helper";
+import Switch from "@/Components/Form/Switch.vue";
 
 const props = defineProps<{
     module: Module;
@@ -25,6 +26,7 @@ const form = useForm({
         .filter((attr) => attr.type !== "primary")
         .map((attr: ModuleAttribute) => ({
             attribute_id: attr.id,
+            type: attr.type,
             label: attr.name,
             value: props.row[attr.id],
         })),
@@ -82,10 +84,17 @@ const submit = () => {
                         </template>
                         <template #input>
                             <TextInput
+                                v-if="attr.type === 'text'"
                                 :id="attr.attribute_id"
                                 v-model="attr.value"
                                 :placeholder="attr.label"
                                 class="w-full"
+                            />
+                            <Switch
+                                v-else-if="attr.type === 'switch'"
+                                :id="`${attr.attribute_id}`"
+                                v-model="attr.value"
+                                class="py-2"
                             />
                             <InputError
                                 :message="

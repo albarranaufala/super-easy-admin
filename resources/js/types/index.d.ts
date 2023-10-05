@@ -23,6 +23,7 @@ export interface ModuleAttribute {
     id: number;
     type: string;
     name: string;
+    default_value: string;
 }
 
 export type PageProps<
