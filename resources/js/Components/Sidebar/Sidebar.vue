@@ -84,7 +84,16 @@ const page = usePage();
                 Roles
             </SidebarLink>
             <Accordion
-                :open="route().current('modules.index') || page.props.sidebar.modules.map((mod: Module): boolean => route().current('crud.modules.index', {module: mod.id})).reduce((acc: number, cur: number) => acc || cur)"
+                :open="
+                    route().current('modules.index') ||
+                    page.props.sidebar.modules
+                        .map(
+                            (mod: Module): boolean => route().current('crud.modules.index', {module: mod.id})
+                        ).
+                        reduce(
+                            ((acc: number, cur: number) => acc || cur),
+                            0
+                        )"
                 class="mt-2"
             >
                 <template #trigger="{ open }">
