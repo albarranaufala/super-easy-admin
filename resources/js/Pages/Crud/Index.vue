@@ -119,7 +119,20 @@ const deleteRow = () => {
                                     (attribute) => attribute.type !== 'primary'
                                 )"
                             >
-                                {{ row[attr.id] }}
+                                <template v-if="attr.type === 'text'">
+                                    {{ row[attr.id] }}
+                                </template>
+                                <template v-else-if="attr.type === 'switch'">
+                                    {{ row[attr.id] === "1" ? "Yes" : "No" }}
+                                </template>
+                                <template v-else-if="attr.type === 'select'">
+                                    {{
+                                        attr.additional_info?.options?.find(
+                                            (option) =>
+                                                option.id === row[attr.id]
+                                        )?.name
+                                    }}
+                                </template>
                             </TableCell>
                             <TableCell class="text-right">
                                 <SecondaryButton
