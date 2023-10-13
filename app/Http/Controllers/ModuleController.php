@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ModuleController extends Controller
 {
@@ -28,8 +29,10 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
-            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch')],
-            'attributes.*.name' => 'required|string|max:255'
+            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch', 'select')],
+            'attributes.*.name' => 'required|string|max:255',
+            'attributes.*.options' => 'nullable|array',
+            'attributes.*.options.*.name' => 'required|string'
         ]);
 
         DB::transaction(function () use ($request) {
@@ -42,11 +45,23 @@ class ModuleController extends Controller
                 'name' => 'ID'
             ]);
             foreach ($request->input('attributes') as $attrReq) {
-                ModuleAttribute::create([
-                    'module_id' => $module->id,
-                    'type' => $attrReq['type'],
-                    'name' => $attrReq['name']
-                ]);
+                $moduleAttribute = new ModuleAttribute();
+                $moduleAttribute->module_id = $module->id;
+                $moduleAttribute->type = $attrReq['type'];
+                $moduleAttribute->name = $attrReq['name'];
+                $options = [];
+                if ($attrReq['type'] === 'select') {
+                    foreach ($attrReq['options'] as $option) {
+                        $options[] = [
+                            'id' => Str::uuid(),
+                            'name' => $option['name']
+                        ];
+                    }
+                    $moduleAttribute->additional_info = [
+                        'options' => $options
+                    ];
+                }
+                $moduleAttribute->save();
             }
         });
 

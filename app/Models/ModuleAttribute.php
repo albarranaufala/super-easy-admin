@@ -13,7 +13,12 @@ class ModuleAttribute extends Model
     protected $fillable = [
         'module_id',
         'type',
-        'name'
+        'name',
+        'additional_info'
+    ];
+
+    protected $casts = [
+        'additional_info' => 'array',
     ];
 
     protected $appends = ['default_value'];
