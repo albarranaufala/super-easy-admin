@@ -14,6 +14,7 @@ import InputError from "@/Components/Form/InputError.vue";
 import Switch from "@/Components/Form/Switch.vue";
 import { Module, ModuleAttribute } from "@/types";
 import { getError } from "@/helper";
+import SelectInput from "@/Components/Form/SelectInput.vue";
 
 const props = defineProps<{
     module: Module;
@@ -24,6 +25,7 @@ const form = useForm({
     row: props.attributes.map((attr: ModuleAttribute) => ({
         attribute_id: attr.id,
         type: attr.type,
+        additional_info: attr.additional_info,
         label: attr.name,
         value: attr.default_value,
     })),
@@ -86,6 +88,22 @@ const submit = () => {
                                 v-else-if="attr.type === 'switch'"
                                 :id="`${attr.attribute_id}`"
                                 v-model="attr.value"
+                                class="py-2"
+                            />
+                            <SelectInput
+                                v-else-if="attr.type === 'select'"
+                                :id="`${attr.attribute_id}`"
+                                v-model="attr.value"
+                                :options="
+                                    attr.additional_info?.options?.map(
+                                        (option) => ({
+                                            label: option.name,
+                                            value: option.id,
+                                        })
+                                    )
+                                "
+                                :reduce="(option) => option?.value"
+                                :placeholder="attr.label"
                                 class="py-2"
                             />
                             <InputError

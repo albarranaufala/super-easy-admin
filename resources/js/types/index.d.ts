@@ -24,6 +24,12 @@ export interface ModuleAttribute {
     type: string;
     name: string;
     default_value: string;
+    additional_info?: {
+        options: Array<{
+            id: string;
+            name: string;
+        }> | null;
+    } | null;
 }
 
 export type PageProps<
