@@ -12,10 +12,12 @@ import PrimaryButton from "@/Components/Button/PrimaryButton.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import InputError from "@/Components/Form/InputError.vue";
 import SelectInput from "@/Components/Form/SelectInput.vue";
+import Modal from "@/Components/Modal.vue";
 import { SelectOption } from "@/types";
 import DangerButton from "@/Components/Button/DangerButton.vue";
 import { getError } from "@/helper";
 import { Module } from "@/types";
+import { nextTick, ref } from "vue";
 
 const props = defineProps<{
     module: Module;
@@ -87,6 +89,28 @@ const deleteOption = (attribute: Attribute, optionIndex: number) => {
 
 const submit = () => {
     form.put(route("modules.update", props.module.id));
+};
+
+const confirmingModuleDeletion = ref(false);
+const passwordInput = ref<HTMLInputElement | null>(null);
+const moduleDeletionForm = useForm({
+    password: "",
+});
+
+const confirmModuleDeletion = () => {
+    confirmingModuleDeletion.value = true;
+
+    nextTick(() => passwordInput.value?.focus());
+};
+
+const deleteModule = () => {
+    moduleDeletionForm.delete(route("modules.destroy", props.module.id));
+};
+
+const closeDeleteModuleModal = () => {
+    confirmingModuleDeletion.value = false;
+
+    moduleDeletionForm.reset();
 };
 </script>
 
@@ -294,10 +318,66 @@ const submit = () => {
                     </div>
                 </CardBody>
             </Card>
-            <SecondaryButton :href="route('modules.index')" class="mt-6 mr-4">
-                Cancel
-            </SecondaryButton>
-            <PrimaryButton class="mt-6"> Save Changes </PrimaryButton>
         </form>
+        <SecondaryButton :href="route('modules.index')" class="mt-6 mr-4">
+            Cancel
+        </SecondaryButton>
+        <PrimaryButton class="mt-6 mr-4" @click="submit">
+            Save Changes
+        </PrimaryButton>
+        <DangerButton class="mt-6" @click="confirmModuleDeletion">
+            Delete
+        </DangerButton>
+        <Modal :show="confirmingModuleDeletion" @close="closeDeleteModuleModal">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Are you sure you want to delete this module?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Once this module is deleted, all of its resources and data
+                    will be deleted. Please enter your password to confirm you
+                    would like to permanently delete your account.
+                </p>
+
+                <div class="mt-6">
+                    <InputLabel
+                        for="password"
+                        value="Password"
+                        class="sr-only"
+                    />
+
+                    <TextInput
+                        id="password"
+                        ref="passwordInput"
+                        v-model="moduleDeletionForm.password"
+                        type="password"
+                        class="block w-3/4 mt-1"
+                        placeholder="Password"
+                        @keyup.enter="deleteModule"
+                    />
+
+                    <InputError
+                        :message="moduleDeletionForm.errors.password"
+                        class="mt-2"
+                    />
+                </div>
+
+                <div class="flex justify-end mt-6">
+                    <SecondaryButton @click="closeDeleteModuleModal">
+                        Cancel
+                    </SecondaryButton>
+
+                    <DangerButton
+                        class="ml-3"
+                        :class="{ 'opacity-25': moduleDeletionForm.processing }"
+                        :disabled="moduleDeletionForm.processing"
+                        @click="deleteModule"
+                    >
+                        Delete Module
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>

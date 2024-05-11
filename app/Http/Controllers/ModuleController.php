@@ -127,4 +127,16 @@ class ModuleController extends Controller
 
         return to_route('modules.edit', $module->id);
     }
+
+    public function destroy(int $moduleId, Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $module = Module::findOrFail($moduleId);
+        $module->delete();
+
+        return to_route('modules.index');
+    }
 }
