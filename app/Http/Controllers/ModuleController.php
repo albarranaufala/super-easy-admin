@@ -21,7 +21,10 @@ class ModuleController extends Controller
 
     public function create()
     {
-        return Inertia::render('Modules/Create');
+        $modules = Module::all();
+        $availableTypes = Module::AVAILABLE_TYPES;
+
+        return Inertia::render('Modules/Create', compact('modules', 'availableTypes'));
     }
 
     public function store(Request $request)
@@ -29,10 +32,11 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
-            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch', 'select')],
+            'attributes.*.type' => ['required', 'string', Rule::in(Module::AVAILABLE_TYPES)],
             'attributes.*.name' => 'required|string|max:255',
             'attributes.*.options' => 'nullable|array',
-            'attributes.*.options.*.name' => 'required|string'
+            'attributes.*.options.*.name' => 'required|string',
+            'attributes.*.reference_module_id' => 'nullable|integer'
         ]);
 
         DB::transaction(function () use ($request) {
@@ -50,7 +54,7 @@ class ModuleController extends Controller
                 $moduleAttribute->type = $attrReq['type'];
                 $moduleAttribute->name = $attrReq['name'];
                 $options = [];
-                if ($attrReq['type'] === 'select') {
+                if ($attrReq['type'] === Module::TYPE_SELECT) {
                     foreach ($attrReq['options'] as $option) {
                         $options[] = [
                             'id' => Str::uuid(),
@@ -59,6 +63,10 @@ class ModuleController extends Controller
                     }
                     $moduleAttribute->additional_info = [
                         'options' => $options
+                    ];
+                } elseif ($attrReq['type'] === Module::TYPE_REFERENCE) {
+                    $moduleAttribute->additional_info = [
+                        'reference_module_id' => $attrReq['reference_module_id']
                     ];
                 }
                 $moduleAttribute->save();
@@ -72,8 +80,10 @@ class ModuleController extends Controller
     {
         $module = Module::with('attributes')
             ->findOrFail($moduleId);
+        $modules = Module::whereNot('id', $module->id)->get();
+        $availableTypes = Module::AVAILABLE_TYPES;
 
-        return Inertia::render('Modules/Edit', compact('module'));
+        return Inertia::render('Modules/Edit', compact('module', 'modules', 'availableTypes'));
     }
 
     public function update(int $moduleId, Request $request)
@@ -82,10 +92,11 @@ class ModuleController extends Controller
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
             'attributes.*.id' => 'nullable|integer',
-            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch', 'select')],
+            'attributes.*.type' => ['required', 'string', Rule::in(Module::AVAILABLE_TYPES)],
             'attributes.*.name' => 'required|string|max:255',
             'attributes.*.options' => 'nullable|array',
-            'attributes.*.options.*.name' => 'required|string'
+            'attributes.*.options.*.name' => 'required|string',
+            'attributes.*.reference_module_id' => 'nullable|integer'
         ]);
 
         $module = Module::with('attributes')->findOrFail($moduleId);
@@ -109,7 +120,7 @@ class ModuleController extends Controller
                 }
                 $moduleAttribute->type = $attrReq['type'];
                 $moduleAttribute->name = $attrReq['name'];
-                if ($attrReq['type'] === 'select') {
+                if ($attrReq['type'] === Module::TYPE_SELECT) {
                     $options = [];
                     foreach ($attrReq['options'] as $option) {
                         $options[] = [
@@ -119,6 +130,10 @@ class ModuleController extends Controller
                     }
                     $moduleAttribute->additional_info = [
                         'options' => $options
+                    ];
+                } elseif ($attrReq['type'] === Module::TYPE_REFERENCE) {
+                    $moduleAttribute->additional_info = [
+                        'reference_module_id' => $attrReq['reference_module_id']
                     ];
                 }
                 $moduleAttribute->save();

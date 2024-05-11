@@ -15,28 +15,24 @@ import SelectInput from "@/Components/Form/SelectInput.vue";
 import DangerButton from "@/Components/Button/DangerButton.vue";
 import IconPlus from "@/Components/Icon/IconPlus.vue";
 import IconTrash from "@/Components/Icon/IconTrash.vue";
-import { SelectOption } from "@/types";
-import { getError } from "@/helper";
+import { Module, SelectOption } from "@/types";
+import { getError, getDefaultOptions } from "@/helper";
+
+const props = defineProps<{
+    modules: Array<Module>;
+    availableTypes: Array<string>;
+}>();
 
 interface Attribute {
     type: string;
     name: string;
-    options?: Array<{
+    options: Array<{
         name: string;
     }>;
+    reference_module_id: number | null;
 }
 
-const defaultOptions = [
-    {
-        name: "Option 1",
-    },
-    {
-        name: "Option 2",
-    },
-    {
-        name: "Option 3",
-    },
-];
+const defaultOptions = getDefaultOptions();
 
 const form = useForm<{
     name: string;
@@ -48,40 +44,41 @@ const form = useForm<{
             type: "text",
             name: "Attribute 1",
             options: defaultOptions,
+            reference_module_id: null,
         },
         {
             type: "text",
             name: "Attribute 2",
             options: defaultOptions,
+            reference_module_id: null,
         },
         {
             type: "text",
             name: "Attribute 3",
             options: defaultOptions,
+            reference_module_id: null,
         },
     ],
 });
 
-const attributeTypes: Array<SelectOption> = [
-    {
-        value: "text",
-        label: "Text",
-    },
-    {
-        value: "switch",
-        label: "Switch",
-    },
-    {
-        value: "select",
-        label: "Select",
-    },
-];
+const availableTypesOptions: Array<SelectOption> = props.availableTypes.map(
+    (type) => ({
+        value: type,
+        label: type,
+    })
+);
+
+const modulesOptions: Array<SelectOption> = props.modules.map((module) => ({
+    value: module.id,
+    label: module.name,
+}));
 
 const addNewAttribute = () => {
     form.attributes.push({
         type: "text",
         name: `Attribute ${form.attributes.length + 1}`,
         options: defaultOptions,
+        reference_module_id: null,
     });
 };
 
@@ -90,13 +87,13 @@ const deleteAttribute = (index: number) => {
 };
 
 const addOption = (attribute: Attribute) => {
-    attribute.options?.push({
+    attribute.options.push({
         name: `Option ${attribute.options.length + 1}`,
     });
 };
 
 const deleteOption = (attribute: Attribute, optionIndex: number) => {
-    attribute.options?.splice(optionIndex, 1);
+    attribute.options.splice(optionIndex, 1);
 };
 
 const submit = () => {
@@ -165,7 +162,7 @@ const submit = () => {
                                 <SelectInput
                                     id="name"
                                     v-model="attribute.type"
-                                    :options="attributeTypes"
+                                    :options="availableTypesOptions"
                                     :reduce="(option) => option?.value"
                                     placeholder="Input module name"
                                 />
@@ -210,7 +207,7 @@ const submit = () => {
                                             class="ml-6"
                                             type="button"
                                             :disabled="
-                                                attribute.options?.length === 1
+                                                attribute.options.length === 1
                                             "
                                             @click="
                                                 deleteOption(
@@ -231,6 +228,15 @@ const submit = () => {
                                             <IconPlus class="w-6 h-6" />
                                         </PrimaryButton>
                                     </div>
+                                </div>
+                                <div v-else-if="attribute.type === 'reference'">
+                                    <SelectInput
+                                        v-model="attribute.reference_module_id"
+                                        :options="modulesOptions"
+                                        :reduce="(option) => option?.value"
+                                        placeholder="Input reference module name"
+                                        class="mt-6"
+                                    />
                                 </div>
                             </div>
                         </div>

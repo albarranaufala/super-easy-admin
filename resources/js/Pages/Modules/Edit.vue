@@ -15,54 +15,57 @@ import SelectInput from "@/Components/Form/SelectInput.vue";
 import Modal from "@/Components/Modal.vue";
 import { SelectOption } from "@/types";
 import DangerButton from "@/Components/Button/DangerButton.vue";
-import { getError } from "@/helper";
+import { getDefaultOptions, getError } from "@/helper";
 import { Module } from "@/types";
 import { nextTick, ref } from "vue";
+import IconTrash from "@/Components/Icon/IconTrash.vue";
+import IconPlus from "@/Components/Icon/IconPlus.vue";
 
 const props = defineProps<{
     module: Module;
+    modules: Array<Module>;
+    availableTypes: Array<string>;
 }>();
 
 interface Attribute {
     id: number | null;
     type: string;
     name: string;
-    options?: Array<{
+    options: Array<{
         name: string;
     }>;
+    reference_module_id: number | null;
 }
 
-const defaultOptions = [
-    {
-        name: "Option 1",
-    },
-    {
-        name: "Option 2",
-    },
-    {
-        name: "Option 3",
-    },
-];
+const defaultOptions = getDefaultOptions();
 
 const form = useForm<{
     name: string;
     attributes: Array<Attribute>;
-}>(props.module);
+}>({
+    name: props.module.name,
+    attributes:
+        props.module.attributes?.map((attribute) => ({
+            id: attribute.id,
+            type: attribute.type,
+            name: attribute.name,
+            options: attribute.additional_info?.options || defaultOptions,
+            reference_module_id:
+                attribute.additional_info?.reference_module_id || null,
+        })) || [],
+});
 
-const attributeTypes: Array<SelectOption> = [
-    {
-        value: "text",
-        label: "Text",
-    },
-    {
-        value: "switch",
-        label: "Switch",
-    },
-    {
-        value: "select",
-        label: "Select",
-    },
-];
+const availableTypesOptions: Array<SelectOption> = props.availableTypes.map(
+    (type) => ({
+        value: type,
+        label: type,
+    })
+);
+
+const modulesOptions: Array<SelectOption> = props.modules.map((module) => ({
+    value: module.id,
+    label: module.name,
+}));
 
 const addNewAttribute = () => {
     form.attributes.push({
@@ -70,6 +73,7 @@ const addNewAttribute = () => {
         type: "text",
         name: `Attribute ${form.attributes.length + 1}`,
         options: defaultOptions,
+        reference_module_id: null,
     });
 };
 
@@ -78,13 +82,13 @@ const deleteAttribute = (index: number) => {
 };
 
 const addOption = (attribute: Attribute) => {
-    attribute.options?.push({
+    attribute.options.push({
         name: `Option ${attribute.options.length + 1}`,
     });
 };
 
 const deleteOption = (attribute: Attribute, optionIndex: number) => {
-    attribute.options?.splice(optionIndex, 1);
+    attribute.options.splice(optionIndex, 1);
 };
 
 const submit = () => {
@@ -175,7 +179,7 @@ const closeDeleteModuleModal = () => {
                                 <SelectInput
                                     id="name"
                                     v-model="attribute.type"
-                                    :options="attributeTypes"
+                                    :options="availableTypesOptions"
                                     :reduce="(option) => option?.value"
                                     placeholder="Input module name"
                                 />
@@ -220,7 +224,7 @@ const closeDeleteModuleModal = () => {
                                             class="ml-6"
                                             type="button"
                                             :disabled="
-                                                attribute.options?.length === 1
+                                                attribute.options.length === 1
                                             "
                                             @click="
                                                 deleteOption(
@@ -229,20 +233,7 @@ const closeDeleteModuleModal = () => {
                                                 )
                                             "
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke-width="1.5"
-                                                stroke="currentColor"
-                                                class="w-6 h-6"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                                />
-                                            </svg>
+                                            <IconTrash class="w-6 h-6" />
                                         </DangerButton>
                                     </div>
                                     <div class="flex justify-end">
@@ -251,22 +242,18 @@ const closeDeleteModuleModal = () => {
                                             class="mt-6"
                                             @click="addOption(attribute)"
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke-width="1.5"
-                                                stroke="currentColor"
-                                                class="w-6 h-6"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    d="M12 4.5v15m7.5-7.5h-15"
-                                                />
-                                            </svg>
+                                            <IconPlus class="w-6 h-6" />
                                         </PrimaryButton>
                                     </div>
+                                </div>
+                                <div v-else-if="attribute.type === 'reference'">
+                                    <SelectInput
+                                        v-model="attribute.reference_module_id"
+                                        :options="modulesOptions"
+                                        :reduce="(option) => option?.value"
+                                        placeholder="Input reference module name"
+                                        class="mt-6"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -277,20 +264,7 @@ const closeDeleteModuleModal = () => {
                                 :disabled="form.attributes.length === 1"
                                 @click="deleteAttribute(index)"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    class="w-6 h-6"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                    />
-                                </svg>
+                                <IconTrash class="w-6 h-6" />
                             </DangerButton>
                         </div>
                     </div>
@@ -300,20 +274,7 @@ const closeDeleteModuleModal = () => {
                             class="mt-6"
                             @click="addNewAttribute"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="w-6 h-6"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M12 4.5v15m7.5-7.5h-15"
-                                />
-                            </svg>
+                            <IconPlus class="w-6 h-6" />
                         </PrimaryButton>
                     </div>
                 </CardBody>

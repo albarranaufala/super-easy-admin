@@ -16,7 +16,6 @@ export interface Module {
     id: number;
     name: string;
     attributes?: Array<ModuleAttribute>;
-    fillable_attributes?: Array<ModuleAttribute>;
 }
 
 export interface ModuleAttribute {
@@ -29,6 +28,7 @@ export interface ModuleAttribute {
             id: string;
             name: string;
         }> | null;
+        reference_module_id: number | null;
     } | null;
 }
 
