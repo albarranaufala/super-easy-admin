@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Module extends Model
 {
@@ -14,13 +15,13 @@ class Module extends Model
         'name'
     ];
 
-    public function attributes(): HasMany
+    public function primaryAttribute(): HasOne
     {
-        return $this->hasMany(ModuleAttribute::class);
+        return $this->hasOne(ModuleAttribute::class)->where('type', 'primary');
     }
 
-    public function fillableAttributes(): HasMany
+    public function attributes(): HasMany
     {
-        return $this->hasMany(ModuleAttribute::class)->whereNotIn('type', ['primary']);
+        return $this->hasMany(ModuleAttribute::class)->whereNot('type', 'primary');
     }
 }

@@ -18,7 +18,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        $modules = Module::with('fillableAttributes')->get();
+        $modules = Module::with('attributes')->get();
 
         return Inertia::render('Roles/Create', compact('modules'));
     }

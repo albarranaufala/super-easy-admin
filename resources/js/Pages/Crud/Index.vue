@@ -24,7 +24,6 @@ import { computed } from "vue";
 
 const props = defineProps<{
     module: Module;
-    attributes: Array<ModuleAttribute>;
     rows: PaginatedData<{ [key: string]: string }>;
 }>();
 
@@ -98,12 +97,9 @@ const deleteRow = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell> No. </TableCell>
-                            <TableCell
-                                v-for="attr in attributes.filter(
-                                    (attribute) => attribute.type !== 'primary'
-                                )"
-                                >{{ attr.name }}</TableCell
-                            >
+                            <TableCell v-for="attr in module.attributes">{{
+                                attr.name
+                            }}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -114,11 +110,7 @@ const deleteRow = () => {
                         </TableRow>
                         <TableRow v-else v-for="(row, index) in rows.data">
                             <TableCell>{{ rows.from + index }}</TableCell>
-                            <TableCell
-                                v-for="attr in attributes.filter(
-                                    (attribute) => attribute.type !== 'primary'
-                                )"
-                            >
+                            <TableCell v-for="attr in module.attributes">
                                 <template v-if="attr.type === 'text'">
                                     {{ row[attr.id] }}
                                 </template>

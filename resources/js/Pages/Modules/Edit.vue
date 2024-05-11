@@ -15,6 +15,11 @@ import SelectInput from "@/Components/Form/SelectInput.vue";
 import { SelectOption } from "@/types";
 import DangerButton from "@/Components/Button/DangerButton.vue";
 import { getError } from "@/helper";
+import { Module } from "@/types";
+
+const props = defineProps<{
+    module: Module;
+}>();
 
 interface Attribute {
     type: string;
@@ -39,26 +44,7 @@ const defaultOptions = [
 const form = useForm<{
     name: string;
     attributes: Array<Attribute>;
-}>({
-    name: "",
-    attributes: [
-        {
-            type: "text",
-            name: "Attribute 1",
-            options: defaultOptions,
-        },
-        {
-            type: "text",
-            name: "Attribute 2",
-            options: defaultOptions,
-        },
-        {
-            type: "text",
-            name: "Attribute 3",
-            options: defaultOptions,
-        },
-    ],
-});
+}>(props.module);
 
 const attributeTypes: Array<SelectOption> = [
     {
@@ -103,11 +89,11 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Add New Module" />
+    <Head title="Edit Module" />
 
     <AuthenticatedLayout>
         <h1 class="text-xl font-semibold leading-tight text-gray-800">
-            Add New Module
+            Edit Module
         </h1>
         <Breadcrumb
             :links="[
@@ -120,8 +106,8 @@ const submit = () => {
                     href: route('modules.index'),
                 },
                 {
-                    name: 'Add New Module',
-                    href: route('modules.create'),
+                    name: 'Edit Module',
+                    href: route('modules.edit', module.id),
                 },
             ]"
             class="mt-2"

@@ -67,4 +67,12 @@ class ModuleController extends Controller
 
         return to_route('modules.index');
     }
+
+    public function edit(int $moduleId)
+    {
+        $module = Module::with('attributes')
+            ->findOrFail($moduleId);
+
+        return Inertia::render('Modules/Edit', compact('module'));
+    }
 }

@@ -18,20 +18,17 @@ import SelectInput from "@/Components/Form/SelectInput.vue";
 
 const props = defineProps<{
     module: Module;
-    attributes: Array<ModuleAttribute>;
     row: { [key: string]: any };
 }>();
 
 const form = useForm({
-    row: props.attributes
-        .filter((attr) => attr.type !== "primary")
-        .map((attr: ModuleAttribute) => ({
-            attribute_id: attr.id,
-            type: attr.type,
-            additional_info: attr.additional_info,
-            label: attr.name,
-            value: props.row[attr.id],
-        })),
+    row: props.module.attributes?.map((attr: ModuleAttribute) => ({
+        attribute_id: attr.id,
+        type: attr.type,
+        additional_info: attr.additional_info,
+        label: attr.name,
+        value: props.row[attr.id],
+    })),
 });
 
 const submit = () => {

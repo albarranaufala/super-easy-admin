@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Module;
-use App\Models\ModuleAttribute;
 use App\Models\ModuleAttributeValue;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,30 +14,25 @@ class CrudModuleController extends Controller
 {
     public function index(int $moduleId)
     {
-        $module = Module::findOrFail($moduleId);
-        $attributes = ModuleAttribute::where('module_id', $module->id)
-            ->get();
-        $primaryAttribute = $attributes->where('type', 'primary')->first();
+        $module = Module::with('primaryAttribute', 'attributes')->findOrFail($moduleId);
+        $primaryAttribute = $module->primaryAttribute;
         $primaryValues = ModuleAttributeValue::where('module_attribute_id', $primaryAttribute->id)
             ->paginate(5);
         $primaryValueIds = $primaryValues->pluck('id');
-        $attributeValues = ModuleAttributeValue::whereIn('id', $primaryValueIds)->orWhereIn('primary_id', $primaryValueIds)->get();
+        $attributeValues = ModuleAttributeValue::whereIn('primary_id', $primaryValueIds)->get();
 
         $rows = [];
         foreach ($primaryValues as $primaryValue) {
-            $row = [];
-            foreach ($attributes as $attribute) {
+            $row = [
+                'primary' => $primaryValue
+            ];
+            foreach ($module->attributes as $attribute) {
                 $attributeValue = $attributeValues
-                    ->filter(function ($value) use ($primaryValue, $attribute) {
-                        return ($value->id === $primaryValue->id && $value->module_attribute_id === $attribute->id) || ($value->primary_id === $primaryValue->id && $value->module_attribute_id === $attribute->id);
-                    })
+                    ->where('primary_id', $primaryValue->id)
+                    ->where('module_attribute_id', $attribute->id)
                     ->first();
 
-                if ($attribute->type === 'primary') {
-                    $row['primary'] = $attributeValue->id;
-                } else {
-                    $row[$attribute->id] = $attributeValue->value;
-                }
+                $row[$attribute->id] = $attributeValue->value;
             }
             $rows[] = $row;
         }
@@ -51,17 +45,14 @@ class CrudModuleController extends Controller
             ['path' => Paginator::resolveCurrentPath()]
         );
 
-        return Inertia::render('Crud/Index', compact('module', 'attributes', 'rows'));
+        return Inertia::render('Crud/Index', compact('module', 'rows'));
     }
 
     public function create(int $moduleId)
     {
-        $module = Module::findOrFail($moduleId);
-        $attributes = ModuleAttribute::where('module_id', $module->id)
-            ->whereNot('type', 'primary')
-            ->get();
+        $module = Module::with('attributes')->findOrFail($moduleId);
 
-        return Inertia::render('Crud/Create', compact('module', 'attributes'));
+        return Inertia::render('Crud/Create', compact('module'));
     }
 
     public function store(int $moduleId, Request $request)
@@ -72,15 +63,14 @@ class CrudModuleController extends Controller
             'row.*.value' => 'required'
         ]);
 
-        $primaryAttributeId = ModuleAttribute::where('module_id', $moduleId)
-            ->where('type', 'primary')
-            ->value('id');
+        $module = Module::with('primaryAttribute')->findOrFail($moduleId);
 
         $primaryValue = ModuleAttributeValue::create([
-            'module_attribute_id' => $primaryAttributeId,
+            'module_attribute_id' => $module->primaryAttribute->id,
             'value' => Str::uuid()
         ]);
 
+        // Albarra: has the disadvantage that there is no validation that attribute_id has the correct value
         foreach ($request->input('row') as $attr) {
             ModuleAttributeValue::create([
                 'module_attribute_id' => $attr['attribute_id'],
@@ -95,26 +85,21 @@ class CrudModuleController extends Controller
 
     public function edit(int $moduleId, int $primaryValueId)
     {
-        $module = Module::findOrFail($moduleId);
-        $attributes = ModuleAttribute::where('module_id', $module->id)
-            ->get();
-        $attributeValues = ModuleAttributeValue::where('id', $primaryValueId)->orWhere('primary_id', $primaryValueId)->get();
-        $row = [];
-        foreach ($attributes as $attribute) {
+        $module = Module::with('attributes')->findOrFail($moduleId);
+        $attributeValues = ModuleAttributeValue::where('primary_id', $primaryValueId)->get();
+        $row = [
+            'primary' => $primaryValueId
+        ];
+        foreach ($module->attributes as $attribute) {
             $attributeValue = $attributeValues
-                ->filter(function ($value) use ($primaryValueId, $attribute) {
-                    return ($value->id === $primaryValueId && $value->module_attribute_id === $attribute->id) || ($value->primary_id === $primaryValueId && $value->module_attribute_id === $attribute->id);
-                })
+                ->where('primary_id', $primaryValueId)
+                ->where('module_attribute_id', $attribute->id)
                 ->first();
 
-            if ($attribute->type === 'primary') {
-                $row['primary'] = $attributeValue->id;
-            } else {
-                $row[$attribute->id] = $attributeValue->value;
-            }
+            $row[$attribute->id] = $attributeValue->value;
         }
 
-        return Inertia::render('Crud/Edit', compact('module', 'attributes', 'row'));
+        return Inertia::render('Crud/Edit', compact('module', 'row'));
     }
 
     public function update(int $moduleId, int $primaryValueId, Request $request)
@@ -127,6 +112,7 @@ class CrudModuleController extends Controller
 
         $primaryValue = ModuleAttributeValue::findOrFail($primaryValueId);
 
+        // Albarra: has the disadvantage that there is no validation that attribute_id has the correct value
         foreach ($request->input('row') as $attr) {
             ModuleAttributeValue::where('module_attribute_id', $attr['attribute_id'])
                 ->where('primary_id', $primaryValue->id)
