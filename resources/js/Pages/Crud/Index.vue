@@ -112,7 +112,7 @@ const deleteRow = () => {
                             <TableCell>{{ rows.from + index }}</TableCell>
                             <TableCell v-for="attr in module.attributes">
                                 <template v-if="attr.type === 'text'">
-                                    {{ row[attr.id] }}
+                                    {{ row[attr.id] ?? "-" }}
                                 </template>
                                 <template v-else-if="attr.type === 'switch'">
                                     {{ row[attr.id] === "1" ? "Yes" : "No" }}
@@ -122,7 +122,7 @@ const deleteRow = () => {
                                         attr.additional_info?.options?.find(
                                             (option) =>
                                                 option.id === row[attr.id]
-                                        )?.name
+                                        )?.name || "-"
                                     }}
                                 </template>
                             </TableCell>

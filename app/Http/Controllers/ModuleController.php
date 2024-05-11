@@ -75,4 +75,56 @@ class ModuleController extends Controller
 
         return Inertia::render('Modules/Edit', compact('module'));
     }
+
+    public function update(int $moduleId, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'attributes' => 'required|array|min:1',
+            'attributes.*.id' => 'nullable|integer',
+            'attributes.*.type' => ['required', 'string', Rule::in('text', 'switch', 'select')],
+            'attributes.*.name' => 'required|string|max:255',
+            'attributes.*.options' => 'nullable|array',
+            'attributes.*.options.*.name' => 'required|string'
+        ]);
+
+        $module = Module::with('attributes')->findOrFail($moduleId);
+
+        DB::transaction(function () use ($request, $module) {
+            $module->update(['name' => $request->input('name')]);
+
+            $attrsReq = collect($request->input('attributes'));
+
+            // Delete attributes that are no longer used
+            $module->attributes()
+                ->whereNotIn('id', $attrsReq->pluck('id'))
+                ->delete();
+
+            // Add or update attributes
+            foreach ($attrsReq as $attrReq) {
+                $moduleAttribute = $module->attributes->find($attrReq['id']);
+                if (!$moduleAttribute) {
+                    $moduleAttribute = new ModuleAttribute();
+                    $moduleAttribute->module_id = $module->id;
+                }
+                $moduleAttribute->type = $attrReq['type'];
+                $moduleAttribute->name = $attrReq['name'];
+                if ($attrReq['type'] === 'select') {
+                    $options = [];
+                    foreach ($attrReq['options'] as $option) {
+                        $options[] = [
+                            'id' => Str::uuid(),
+                            'name' => $option['name']
+                        ];
+                    }
+                    $moduleAttribute->additional_info = [
+                        'options' => $options
+                    ];
+                }
+                $moduleAttribute->save();
+            }
+        });
+
+        return to_route('modules.edit', $module->id);
+    }
 }

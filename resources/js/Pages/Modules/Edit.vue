@@ -22,6 +22,7 @@ const props = defineProps<{
 }>();
 
 interface Attribute {
+    id: number | null;
     type: string;
     name: string;
     options?: Array<{
@@ -63,6 +64,7 @@ const attributeTypes: Array<SelectOption> = [
 
 const addNewAttribute = () => {
     form.attributes.push({
+        id: null,
         type: "text",
         name: `Attribute ${form.attributes.length + 1}`,
         options: defaultOptions,
@@ -84,7 +86,7 @@ const deleteOption = (attribute: Attribute, optionIndex: number) => {
 };
 
 const submit = () => {
-    form.post(route("modules.store"));
+    form.put(route("modules.update", props.module.id));
 };
 </script>
 
@@ -295,7 +297,7 @@ const submit = () => {
             <SecondaryButton :href="route('modules.index')" class="mt-6 mr-4">
                 Cancel
             </SecondaryButton>
-            <PrimaryButton class="mt-6"> Save New Module </PrimaryButton>
+            <PrimaryButton class="mt-6"> Save Changes </PrimaryButton>
         </form>
     </AuthenticatedLayout>
 </template>
