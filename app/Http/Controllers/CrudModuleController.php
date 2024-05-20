@@ -4,47 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Module;
 use App\Models\ModuleAttributeValue;
+use App\Models\Row;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Illuminate\Support\Str;
 
 class CrudModuleController extends Controller
 {
     public function index(int $moduleId)
     {
-        $module = Module::with('primaryAttribute', 'attributes')->findOrFail($moduleId);
-        $primaryAttribute = $module->primaryAttribute;
-        $primaryValues = ModuleAttributeValue::where('module_attribute_id', $primaryAttribute->id)
-            ->paginate(5);
-        $primaryValueIds = $primaryValues->pluck('id');
-        $attributeValues = ModuleAttributeValue::whereIn('primary_id', $primaryValueIds)->get();
-
-        $rows = [];
-        foreach ($primaryValues as $primaryValue) {
-            $row = [
-                'primary' => $primaryValue
-            ];
-            foreach ($module->attributes as $attribute) {
-                $attributeValue = $attributeValues
-                    ->where('primary_id', $primaryValue->id)
-                    ->where('module_attribute_id', $attribute->id)
-                    ->first();
-
-                $row[$attribute->id] = $attributeValue?->value;
-            }
-            $rows[] = $row;
-        }
-
-        $rows = new LengthAwarePaginator(
-            $rows,
-            $primaryValues->total(),
-            $primaryValues->perPage(),
-            $primaryValues->currentPage(),
-            ['path' => Paginator::resolveCurrentPath()]
-        );
+        $module = Module::with('attributes')->findOrFail($moduleId);
+        $rows = Row::forModule($moduleId)->paginate(5);
 
         return Inertia::render('Crud/Index', compact('module', 'rows'));
     }
@@ -52,35 +21,19 @@ class CrudModuleController extends Controller
     public function create(int $moduleId)
     {
         $module = Module::with('attributes')->findOrFail($moduleId);
-
+        $module->attributes->each->append('referenced_module_rows');
         return Inertia::render('Crud/Create', compact('module'));
     }
 
     public function store(int $moduleId, Request $request)
     {
         $request->validate([
-            'row' => 'required|array',
-            'row.*.attribute_id' => 'required|integer',
-            'row.*.value' => 'required'
+            'attribute_values' => 'required|array',
+            'attribute_values.*.attribute_id' => 'required|integer',
+            'attribute_values.*.value' => 'required'
         ]);
 
-        $module = Module::with('primaryAttribute')->findOrFail($moduleId);
-
-        DB::transaction(function () use ($request, $module) {
-            $primaryValue = ModuleAttributeValue::create([
-                'module_attribute_id' => $module->primaryAttribute->id,
-                'value' => Str::uuid()
-            ]);
-
-            // Albarra: has the disadvantage that there is no validation that attribute_id has the correct value
-            foreach ($request->input('row') as $attr) {
-                ModuleAttributeValue::create([
-                    'module_attribute_id' => $attr['attribute_id'],
-                    'primary_id' => $primaryValue->id,
-                    'value' => $attr['value']
-                ]);
-            }
-        });
+        Row::forModule($moduleId)->create($request->input('attribute_values'));
 
         return to_route('crud.modules.index', $moduleId);
     }
@@ -89,18 +42,8 @@ class CrudModuleController extends Controller
     public function edit(int $moduleId, int $primaryValueId)
     {
         $module = Module::with('attributes')->findOrFail($moduleId);
-        $attributeValues = ModuleAttributeValue::where('primary_id', $primaryValueId)->get();
-        $row = [
-            'primary' => $primaryValueId
-        ];
-        foreach ($module->attributes as $attribute) {
-            $attributeValue = $attributeValues
-                ->where('primary_id', $primaryValueId)
-                ->where('module_attribute_id', $attribute->id)
-                ->first();
-
-            $row[$attribute->id] = $attributeValue?->value;
-        }
+        $module->attributes->each->append('referenced_module_rows');
+        $row = Row::forModule($module->id)->find($primaryValueId);
 
         return Inertia::render('Crud/Edit', compact('module', 'row'));
     }
@@ -108,27 +51,12 @@ class CrudModuleController extends Controller
     public function update(int $moduleId, int $primaryValueId, Request $request)
     {
         $request->validate([
-            'row' => 'required|array',
-            'row.*.attribute_id' => 'required|integer',
-            'row.*.value' => 'required'
+            'attribute_values' => 'required|array',
+            'attribute_values.*.attribute_id' => 'required|integer',
+            'attribute_values.*.value' => 'required'
         ]);
 
-        $primaryValue = ModuleAttributeValue::findOrFail($primaryValueId);
-
-        DB::transaction(function () use ($request, $primaryValue) {
-            // Albarra: has the disadvantage that there is no validation that attribute_id has the correct value
-            foreach ($request->input('row') as $attr) {
-                ModuleAttributeValue::updateOrCreate(
-                    [
-                        'module_attribute_id' => $attr['attribute_id'],
-                        'primary_id' => $primaryValue->id
-                    ],
-                    [
-                        'value' => $attr['value']
-                    ]
-                );
-            }
-        });
+        Row::forModule($moduleId)->update($primaryValueId, $request->input('attribute_values'));
 
         return to_route('crud.modules.index', $moduleId);
     }

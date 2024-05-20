@@ -22,7 +22,7 @@ class ModuleController extends Controller
     public function create()
     {
         $modules = Module::all();
-        $availableTypes = Module::AVAILABLE_TYPES;
+        $availableTypes = ModuleAttribute::AVAILABLE_TYPES;
 
         return Inertia::render('Modules/Create', compact('modules', 'availableTypes'));
     }
@@ -32,7 +32,7 @@ class ModuleController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
-            'attributes.*.type' => ['required', 'string', Rule::in(Module::AVAILABLE_TYPES)],
+            'attributes.*.type' => ['required', 'string', Rule::in(ModuleAttribute::AVAILABLE_TYPES)],
             'attributes.*.name' => 'required|string|max:255',
             'attributes.*.options' => 'nullable|array',
             'attributes.*.options.*.name' => 'required|string',
@@ -54,7 +54,7 @@ class ModuleController extends Controller
                 $moduleAttribute->type = $attrReq['type'];
                 $moduleAttribute->name = $attrReq['name'];
                 $options = [];
-                if ($attrReq['type'] === Module::TYPE_SELECT) {
+                if ($attrReq['type'] === ModuleAttribute::TYPE_SELECT) {
                     foreach ($attrReq['options'] as $option) {
                         $options[] = [
                             'id' => Str::uuid(),
@@ -64,7 +64,7 @@ class ModuleController extends Controller
                     $moduleAttribute->additional_info = [
                         'options' => $options
                     ];
-                } elseif ($attrReq['type'] === Module::TYPE_REFERENCE) {
+                } elseif ($attrReq['type'] === ModuleAttribute::TYPE_REFERENCE) {
                     $moduleAttribute->additional_info = [
                         'reference_module_id' => $attrReq['reference_module_id']
                     ];
@@ -81,7 +81,7 @@ class ModuleController extends Controller
         $module = Module::with('attributes')
             ->findOrFail($moduleId);
         $modules = Module::whereNot('id', $module->id)->get();
-        $availableTypes = Module::AVAILABLE_TYPES;
+        $availableTypes = ModuleAttribute::AVAILABLE_TYPES;
 
         return Inertia::render('Modules/Edit', compact('module', 'modules', 'availableTypes'));
     }
@@ -92,7 +92,7 @@ class ModuleController extends Controller
             'name' => 'required|string|max:255',
             'attributes' => 'required|array|min:1',
             'attributes.*.id' => 'nullable|integer',
-            'attributes.*.type' => ['required', 'string', Rule::in(Module::AVAILABLE_TYPES)],
+            'attributes.*.type' => ['required', 'string', Rule::in(ModuleAttribute::AVAILABLE_TYPES)],
             'attributes.*.name' => 'required|string|max:255',
             'attributes.*.options' => 'nullable|array',
             'attributes.*.options.*.name' => 'required|string',
@@ -120,7 +120,7 @@ class ModuleController extends Controller
                 }
                 $moduleAttribute->type = $attrReq['type'];
                 $moduleAttribute->name = $attrReq['name'];
-                if ($attrReq['type'] === Module::TYPE_SELECT) {
+                if ($attrReq['type'] === ModuleAttribute::TYPE_SELECT) {
                     $options = [];
                     foreach ($attrReq['options'] as $option) {
                         $options[] = [
@@ -131,7 +131,7 @@ class ModuleController extends Controller
                     $moduleAttribute->additional_info = [
                         'options' => $options
                     ];
-                } elseif ($attrReq['type'] === Module::TYPE_REFERENCE) {
+                } elseif ($attrReq['type'] === ModuleAttribute::TYPE_REFERENCE) {
                     $moduleAttribute->additional_info = [
                         'reference_module_id' => $attrReq['reference_module_id']
                     ];

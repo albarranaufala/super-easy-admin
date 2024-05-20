@@ -21,12 +21,13 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
-    row: props.module.attributes?.map((attr: ModuleAttribute) => ({
+    attribute_values: props.module.attributes?.map((attr: ModuleAttribute) => ({
         attribute_id: attr.id,
         type: attr.type,
         additional_info: attr.additional_info,
         label: attr.name,
         value: attr.default_value,
+        referenced_module_rows: attr.referenced_module_rows || [],
     })),
 });
 
@@ -66,7 +67,7 @@ const submit = () => {
             <CardBody>
                 <form @submit.prevent="submit">
                     <FormGroup
-                        v-for="(attr, index) in form.row"
+                        v-for="(attr, index) in form.attribute_values"
                         :class="{ 'mt-6': index > 0 }"
                     >
                         <template #label>
@@ -105,9 +106,30 @@ const submit = () => {
                                 :placeholder="attr.label"
                                 class="py-2"
                             />
+                            <SelectInput
+                                v-else-if="attr.type === 'reference'"
+                                :id="`${attr.attribute_id}`"
+                                v-model="attr.value"
+                                :options="
+                                    attr.referenced_module_rows.map(
+                                        (row: any) => {
+                                            return {
+                                                label: row[row['display_attribute_id']],
+                                                value: row,
+                                            }
+                                        }
+                                    )
+                                "
+                                :reduce="(option) => option?.value"
+                                :placeholder="attr.label"
+                                class="py-2"
+                            />
                             <InputError
                                 :message="
-                                    getError(form.errors, `row.${index}.value`)
+                                    getError(
+                                        form.errors,
+                                        `attribute_values.${index}.value`
+                                    )
                                 "
                             />
                         </template>

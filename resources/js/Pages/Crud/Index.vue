@@ -24,14 +24,14 @@ import { computed } from "vue";
 
 const props = defineProps<{
     module: Module;
-    rows: PaginatedData<{ [key: string]: string }>;
+    rows: PaginatedData<{ [key: string]: any }>;
 }>();
 
 const search = ref("");
 
 const deleteForm = useForm({});
 
-const deletingRow: Ref<{ [key: string]: string } | null> = ref(null);
+const deletingRow: Ref<{ [key: string]: any } | null> = ref(null);
 
 const closeDeletingRowModal = () => {
     deletingRow.value = null;
@@ -123,6 +123,13 @@ const deleteRow = () => {
                                             (option) =>
                                                 option.id === row[attr.id]
                                         )?.name || "-"
+                                    }}
+                                </template>
+                                <template v-else-if="attr.type === 'reference'">
+                                    {{
+                                        row[attr.id][
+                                            row[attr.id]["display_attribute_id"]
+                                        ]
                                     }}
                                 </template>
                             </TableCell>

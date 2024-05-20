@@ -22,7 +22,6 @@ export interface ModuleAttribute {
     id: number;
     type: string;
     name: string;
-    default_value: string;
     additional_info?: {
         options: Array<{
             id: string;
@@ -30,6 +29,8 @@ export interface ModuleAttribute {
         }> | null;
         reference_module_id: number | null;
     } | null;
+    default_value: string;
+    referenced_module_rows?: Array<{ [key: string]: string }>;
 }
 
 export type PageProps<
@@ -57,5 +58,5 @@ export interface PaginatedData<T> {
 
 export interface SelectOption {
     label: string;
-    value: string | number;
+    value: any;
 }
