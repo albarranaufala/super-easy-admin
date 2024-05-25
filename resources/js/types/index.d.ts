@@ -9,7 +9,19 @@ export interface User {
 export interface Role {
     id: number;
     name: string;
+    permissions?: Array<Permission>;
     users_count?: number;
+}
+
+type PermissionAction = "view" | "create" | "update" | "delete";
+type PermissionQuery = "any" | "own" | "query" | "restricted" | string;
+
+export interface Permission {
+    id: number;
+    module_id: number;
+    action: PermissionAction;
+    query: PermissionQuery;
+    module?: Module;
 }
 
 export interface Module {

@@ -156,7 +156,7 @@ const page = usePage();
                     </SidebarLink>
                 </template>
             </Accordion>
-            <SidebarLink
+            <!-- <SidebarLink
                 :href="route('roles.index')"
                 :active="route().current('roles.index')"
                 class="w-full mt-2"
@@ -182,7 +182,7 @@ const page = usePage();
                 </svg>
 
                 Settings
-            </SidebarLink>
+            </SidebarLink> -->
         </nav>
     </aside>
 </template>

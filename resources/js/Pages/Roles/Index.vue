@@ -57,16 +57,9 @@ defineProps<{
                         Total users with this role:
                         {{ role.users_count }}
                     </p>
-                    <ul class="pl-4 mt-6 text-sm text-gray-500 list-disc">
-                        <li>User: View All, Write All</li>
-                        <li class="mt-4">Roles: View All, Write All</li>
-                        <li class="mt-4">Events: View All, Write All</li>
-                        <li class="mt-4">Categories: View All, Write All</li>
-                        <li class="mt-4">Articles: View All, Write All</li>
-                    </ul>
                     <div class="mt-6">
-                        <SecondaryButton :href="route('roles.show', role.id)">
-                            View Role
+                        <SecondaryButton :href="route('roles.edit', role.id)">
+                            Manage Role
                         </SecondaryButton>
                     </div>
                 </CardBody>

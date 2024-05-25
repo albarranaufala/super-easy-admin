@@ -21,12 +21,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return to_route('dashboard');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -34,8 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::resource('users', UserController::class);
-    Route::resource('roles', RoleController::class);
-    Route::resource('modules', ModuleController::class);
+    Route::resource('roles', RoleController::class)->except('show');
+    Route::resource('modules', ModuleController::class)->except('show');
     Route::get('crud/modules/{module}', [CrudModuleController::class, 'index'])->name('crud.modules.index');
     Route::get('crud/modules/{module}/create', [CrudModuleController::class, 'create'])->name('crud.modules.create');
     Route::post('crud/modules/{module}', [CrudModuleController::class, 'store'])->name('crud.modules.store');
